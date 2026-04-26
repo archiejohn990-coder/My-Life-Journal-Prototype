@@ -772,40 +772,38 @@ html {
 
         <!-- FRIENDS -->
         <section id="view-friends" class="hidden">
-          <h1>My Friends</h1>
+    <h1>My Friends</h1>
 
-          <div class="card" style="text-align: center; padding: 40px;">
-            <i class="fas fa-user-plus fa-3x" style="color: var(--primary); margin-bottom: 15px;"></i>
-            <h3>Add a Friend</h3>
-            <p class="muted">Connect with other journal users.</p>
-            
-            <div style="max-width: 400px; margin: 20px auto;">
-              <input type="email" id="friendEmail" class="input" placeholder="friend@example.com">
-              <div class="button-row-center" style="margin-top: 25px;">
+    <div class="card" style="text-align: center; padding: 40px;">
+        <i class="fas fa-user-plus fa-3x" style="color: var(--primary); margin-bottom: 15px;"></i>
+        <h3>Add a Friend</h3>
+        <p class="muted">Connect with other journal users.</p>
+        
+        <div style="max-width: 400px; margin: 20px auto;">
+            <input type="email" id="friendEmail" class="input" placeholder="friend@example.com">
+            <div class="button-row-center" style="margin-top: 25px;">
                 <button class="btn-inline" onclick="addFriendAction()">
-                  <i class="fas fa-paper-plane"></i> Send Request
+                    <i class="fas fa-paper-plane"></i> Send Request
                 </button>
-              </div>
             </div>
-          </div>
+        </div>
+    </div>
+    <div class="card" style="margin-top: 20px; border-left: 4px solid var(--primary);">
+    <h3><i class="fas fa-envelope-open-text"></i> Shared with Me</h3>
+    <div id="sharedInboxContainer">
+        <p class="muted" style="text-align:center; padding:10px;">Checking for shared entries...</p>
+    </div>
+</div>
 
-          <div class="card" style="margin-top: 20px; border-left: 4px solid var(--primary);">
-            <h3><i class="fas fa-envelope-open-text"></i> Shared with Me</h3>
-            <div id="sharedInboxContainer">
-              <p class="muted" style="text-align:center; padding:10px;">Checking for shared entries...</p>
+    <div class="card" style="margin-top: 20px;">
+        <h3><i class="fas fa-bell"></i> Pending Requests</h3>
+        <div id="pendingRequests"></div> </div> </section>
+
+        <div class="card" style="margin-top: 20px; border-top: 4px solid #10b981;">
+        <h3><i class="fas fa-users"></i> My Friends</h3>
+        <div id="confirmedFriendsList">
             </div>
-          </div>
-
-          <div class="card" style="margin-top: 20px;">
-            <h3><i class="fas fa-bell"></i> Pending Requests</h3>
-            <div id="pendingRequests"></div>
-          </div>
-
-          <div class="card" style="margin-top: 20px; border-top: 4px solid #10b981;">
-            <h3><i class="fas fa-users"></i> My Friends</h3>
-            <div id="confirmedFriendsList"></div>
-          </div>
-        </section>
+    </div>
 
         <!-- SETTINGS -->
         <section id="view-settings" class="hidden">
@@ -832,8 +830,9 @@ html {
               <div class="label" style="margin-top: 12px;">Secret PIN</div>
               <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--border); border-radius:14px; background: color-mix(in oklab, var(--border) 8%, transparent); font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;">
                 <span id="pinText">••••••</span>
+                <i id="pinToggle" class="fas fa-eye" onclick="togglePinVisibility()"></i>
                 <button class="iconbtn" type="button" onclick="togglePinVisibility()" title="Show/Hide PIN">
-                  <i class="fas fa-eye" id="pinToggleIcon"></i>
+                  <i class="fas fa-eye" id="pinToggle"></i>
                 </button>
               </div>
 
@@ -942,514 +941,1252 @@ html {
         </div>
         <br>
         <div class="card notice" style="margin:0;">
+
           <h3>Our Team</h3>
-          <div class="team">
-            <div class="member">
-              <a href="https://www.facebook.com/carlonuyda7" target="_blank">
-                <img src="/Team/Carlo.jpg" alt="Carlo">
-              </a>
-              <p>Carlo Nuyda</p>
-            </div>
-            <div class="member">
-              <a href="https://www.facebook.com/yurievillacorte" target="_blank">
-                <img src="/Team/Yurie.jpg" alt="Yurie">
-              </a>
-              <p>Yurie Villacorte</p>
-            </div>
-            <div class="member">
-              <a href="https://www.facebook.com/archie.jhon.gregorio" target="_blank">
-                <img src="/Team/Archie.jpg" alt="Archie">
-              </a>
-              <p>Archie Jhon Gregorio</p>
-            </div>
-            <div class="member">
-              <a href="https://www.facebook.com/kyle.serapia.507" target="_blank">
-                <img src="/Team/Daisy.jpg" alt="Daisy">
-              </a>
-              <p>Daisy Serapia</p>
-            </div>
-            <div class="member">
-              <a href="https://www.facebook.com/trishan.laurito.2025" target="_blank">
-                <img src="/Team/Trishan.jpg" alt="Trishan">
-              </a>
-              <p>Trishan Laurito</p>
-            </div>
-          </div>
-        </div>
-      </div>
+
+  <div class="team">
+
+    <div class="member">
+      <a href="https://www.facebook.com/carlonuyda7" target="_blank">
+      <img src="/Team/Carlo.jpg" Alt="Carlo"></a>
+      <p1> Carlo Nuyda</p1>
+    </div>
+
+    <div class="member">
+      <a href="https://www.facebook.com/yurievillacorte" target="_blank">
+      <img src="/Team/Yurie.jpg" Alt="Yurie"></a>
+      <p1> Yurie Villacorte</p1>
+    </div>
+
+    <div class="member">
+      <a href="https://www.facebook.com/archie.jhon.gregorio" target="_blank">
+      <img src="/Team/Archie.jpg" Alt="Archie"></a>
+      <p1> Archie Jhon Gregorio</p1>
+    </div>
+
+    <div class="member">
+      <a href="https://www.facebook.com/kyle.serapia.507" target="_blank">
+      <img src="/Team/Daisy.jpg" alt="Daisy"></a>
+      <p1>Daisy Serapia</p1>
+    </div>
+
+    <div class="member">
+      <a href="https://www.facebook.com/trishan.laurito.2025" target="_blank">
+      <img src="/Team/Trishan.jpg" alt="Trishan"></a>
+      <p1>Trishan Laurito</p1>
     </div>
   </div>
 
-  <script>
-const express = require("express");
-const cors = require("cors");
-const path = require("path");
-const mongoose = require("mongoose");
-require("dotenv").config();
+<script>
+const LS_USERS = "journal_ultra_users";
+const LS_CURRENT = "journal_ultra_current";
+const LS_THEME = "journal_ultra_theme";
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+const $ = (id) => document.getElementById(id);
 
-// Middleware
-app.use(cors());
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-
-// MongoDB Connection
-const MONGO_URL = process.env.MONGO_URL || "mongodb+srv://Archie:Archie1225@cluster0.7e4s845.mongodb.net/myjournal?retryWrites=true&w=majority";
-
-mongoose.connect(MONGO_URL)
-  .then(() => console.log("✅ Connected to MongoDB Atlas!"))
-  .catch(err => console.error("❌ MongoDB Connection Error:", err));
-
-/* =========================
-   SCHEMAS
-========================= */
-
-// User Schema
-const userSchema = new mongoose.Schema({
-  email: { type: String, required: true, unique: true, lowercase: true, index: true },
-  name: { type: String, required: true },
-  passwordHash: { type: String, required: true },
-  pinHash: { type: String, required: true },
-  kdfSalt: { type: String, required: true },
-  pinSalt: { type: String, required: true },
-  photo: { type: String, default: null },
-  encryptedVault: {
-    iv: { type: String, default: "" },
-    data: { type: String, default: "" }
-  },
-  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-  friendRequests: [{
-    from: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    fromEmail: { type: String },
-    status: { type: String, enum: ['pending', 'accepted', 'rejected'], default: 'pending' },
-    createdAt: { type: Date, default: Date.now }
-  }],
-  lastSync: { type: Date, default: Date.now },
-  createdAt: { type: Date, default: Date.now }
-});
-
-// Shared Entry Schema
-const sharedEntrySchema = new mongoose.Schema({
-  from: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  to: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  fromEmail: { type: String, required: true, index: true },
-  toEmail: { type: String, required: true, index: true },
-  title: { type: String, default: "" },
-  body: { type: String, default: "" },
-  mood: { type: String, default: "" },
-  date: { type: String, default: "" },
-  image: { type: String, default: null },
-  tags: [{ type: String }],
-  sharedAt: { type: Date, default: Date.now, index: true },
-  read: { type: Boolean, default: false }
-});
-
-const User = mongoose.model("User", userSchema);
-const SharedEntry = mongoose.model("SharedEntry", sharedEntrySchema);
-
-/* =========================
-   HELPER FUNCTIONS
-========================= */
-
-function cleanUser(user) {
-  return {
-    id: user._id,
-    email: user.email,
-    name: user.name,
-    photo: user.photo,
-    kdfSalt: user.kdfSalt,
-    encryptedVault: user.encryptedVault,
-    lastSync: user.lastSync
-  };
+function toast(type, title, msg){
+  const wrap = $("toastWrap");
+  const el = document.createElement("div");
+  el.className = "toast" + (type ? " " + type : "");
+  el.innerHTML = `
+    <i class="fas ${type === "danger" ? "fa-triangle-exclamation" : type === "warn" ? "fa-circle-exclamation" : "fa-circle-check"}"></i>
+    <div>
+      <div class="t-title">${escapeHtml(title)}</div>
+      <div class="t-msg">${escapeHtml(msg)}</div>
+    </div>
+    <button class="x" aria-label="Close" onclick="this.parentElement.remove()">✕</button>
+  `;
+  wrap.appendChild(el);
+  setTimeout(() => { if (el && el.parentElement) el.remove(); }, 4500);
+}
+function escapeHtml(str){
+  return String(str ?? "")
+    .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;").replaceAll("'","&#039;");
 }
 
-/* =========================
-   AUTH ROUTES
-========================= */
+function applyTheme(theme){
+  document.documentElement.setAttribute("data-theme", theme);
+  localStorage.setItem(LS_THEME, theme);
+}
+function toggleTheme(){
+  const cur = localStorage.getItem(LS_THEME) || "light";
+  applyTheme(cur === "light" ? "dark" : "light");
+}
+(function initTheme(){
+  const saved = localStorage.getItem(LS_THEME);
+  if(saved) applyTheme(saved);
+  else {
+    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    applyTheme(prefersDark ? "dark" : "light");
+  }
+})();
 
-// Signup
-app.post("/api/signup", async (req, res) => {
-  try {
-    const { email, name, passwordHash, pinHash, kdfSalt, pinSalt, photo, encryptedVault } = req.body;
-    
-    const existingUser = await User.findOne({ email: email.toLowerCase() });
-    if (existingUser) {
-      return res.status(400).json({ error: "Email already registered" });
+function readUsers(){ return JSON.parse(localStorage.getItem(LS_USERS) || "[]"); }
+function writeUsers(users){ localStorage.setItem(LS_USERS, JSON.stringify(users)); }
+function readCurrent(){ return JSON.parse(localStorage.getItem(LS_CURRENT) || "null"); }
+function writeCurrent(obj){ localStorage.setItem(LS_CURRENT, JSON.stringify(obj)); }
+function uuid(){ return "id_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16); }
+function validPin(pin){ return /^[0-9]{6}$/.test(pin); }
+
+let captchaCode = "";
+function generateCaptcha(){
+  captchaCode = Math.random().toString(36).substring(2,6).toUpperCase();
+  $("captchaBox").innerText = captchaCode;
+  $("captchaInp").value = "";
+}
+
+function bytesToB64(bytes){
+  let bin = "";
+  bytes.forEach(b => bin += String.fromCharCode(b));
+  return btoa(bin);
+}
+function b64ToBytes(b64){
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+  return bytes;
+}
+async function sha256(str){
+  const enc = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest("SHA-256", enc);
+  return bytesToB64(new Uint8Array(hash));
+}
+async function deriveAesKey(password, saltBytes){
+  const enc = new TextEncoder();
+  const baseKey = await crypto.subtle.importKey(
+    "raw", enc.encode(password), "PBKDF2", false, ["deriveKey"]
+  );
+  return crypto.subtle.deriveKey(
+    { name:"PBKDF2", salt: saltBytes, iterations: 200000, hash:"SHA-256" },
+    baseKey,
+    { name:"AES-GCM", length: 256 },
+    false,
+    ["encrypt","decrypt"]
+  );
+}
+async function encryptJson(obj, password, saltB64){
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const salt = b64ToBytes(saltB64);
+  const key = await deriveAesKey(password, salt);
+  const plain = new TextEncoder().encode(JSON.stringify(obj));
+  const cipher = await crypto.subtle.encrypt({ name:"AES-GCM", iv }, key, plain);
+  return { iv: bytesToB64(iv), data: bytesToB64(new Uint8Array(cipher)) };
+}
+async function decryptJson(encObj, password, saltB64){
+  const salt = b64ToBytes(saltB64);
+  const iv = b64ToBytes(encObj.iv);
+  const data = b64ToBytes(encObj.data);
+  const key = await deriveAesKey(password, salt);
+  const plainBuf = await crypto.subtle.decrypt({ name:"AES-GCM", iv }, key, data);
+  const text = new TextDecoder().decode(plainBuf);
+  return JSON.parse(text);
+}
+
+let authMode = "login";
+function toggleMode(mode){
+  authMode = mode;
+  $("tabLogin").classList.toggle("active", mode === "login");
+  $("tabSignup").classList.toggle("active", mode === "signup");
+  $("tabLogin").setAttribute("aria-selected", mode === "login" ? "true" : "false");
+  $("tabSignup").setAttribute("aria-selected", mode === "signup" ? "true" : "false");
+  $("fieldName").classList.toggle("hidden", mode === "login");
+  $("submitBtn").innerText = mode === "login" ? "Login" : "Create Account";
+  $("pass").setAttribute("autocomplete", mode === "login" ? "current-password" : "new-password");
+  generateCaptcha();
+}
+function toggleRecovery(show){
+  $("loginFormContainer").classList.toggle("hidden", show);
+  $("recoveryFormContainer").classList.toggle("hidden", !show);
+  generateCaptcha();
+}
+async function handleRecovery(){
+  const email = $("recoverEmail").value.trim().toLowerCase();
+  const name  = $("recoverNameInput").value.trim();
+  const newPass = $("newPass").value;
+  const newPin  = $("newPin").value;
+
+  if(!email || !name) return toast("warn","Missing details","Please enter your email and full name.");
+  if(newPass && newPass.length < 8) return toast("warn","Weak password","Use at least 8 characters.");
+  if(newPin && !validPin(newPin)) return toast("warn","Invalid PIN","PIN must be exactly 6 digits.");
+
+  const users = readUsers();
+  const idx = users.findIndex(u => u.email === email && u.name.toLowerCase() === name.toLowerCase());
+  if(idx === -1) return toast("danger","Details mismatch","No matching account.");
+
+  if(newPass){
+    const salt = bytesToB64(crypto.getRandomValues(new Uint8Array(16)));
+    users[idx].passHash = await sha256(newPass + "|" + salt);
+    users[idx].kdfSalt = salt;
+    users[idx].vault = { iv:"", data:"" };
+    users[idx].failed = 0;
+    users[idx].lockUntil = 0;
+  }
+  if(newPin){
+    const psalt = bytesToB64(crypto.getRandomValues(new Uint8Array(16)));
+    users[idx].pinSalt = psalt;
+    users[idx].pinHash = await sha256(newPin + "|" + psalt);
+  }
+  writeUsers(users);
+
+  toast("", "Updated!", "Reset complete. You can log in now.");
+  $("recoverEmail").value = "";
+  $("recoverNameInput").value = "";
+  $("newPass").value = "";
+  $("newPin").value = "";
+  toggleRecovery(false);
+}
+
+/* ---------- Login / Signup ---------- */
+let sessionPassword = ""; // held in memory for encrypt/decrypt in this session only
+
+$("authForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  if(($("captchaInp").value || "").trim().toUpperCase() !== captchaCode){
+    generateCaptcha();
+    return toast("danger","Wrong captcha","Try again.");
+  }
+
+  const email = $("email").value.trim().toLowerCase();
+  const pass  = $("pass").value;
+  const pin   = ($("pin").value || "").trim();
+
+  if(!email) return toast("warn","Missing email","Please enter your email.");
+  if(!pass) return toast("warn","Missing password","Please enter your password.");
+  if(!validPin(pin)) return toast("warn","Invalid PIN","PIN must be exactly 6 digits.");
+
+  let users = readUsers();
+
+  if(authMode === "signup"){
+    const name = $("regName").value.trim();
+    if(!name || name.length < 2) return toast("warn","Name required","Enter your full name.");
+    if(pass.length < 8) return toast("warn","Weak password","Use at least 8 characters.");
+
+    if(users.some(u => u.email === email)){
+      return toast("danger","User exists","That email is already registered.");
     }
-    
-    const user = new User({
-      email: email.toLowerCase(),
-      name,
-      passwordHash,
-      pinHash,
+
+    const kdfSalt = bytesToB64(crypto.getRandomValues(new Uint8Array(16)));
+    const passHash = await sha256(pass + "|" + kdfSalt);
+
+    const pinSalt = bytesToB64(crypto.getRandomValues(new Uint8Array(16)));
+    const pinHash = await sha256(pin + "|" + pinSalt);
+
+    const newUser = {
+      id: uuid(),
+      name, email,
       kdfSalt,
+      passHash,
       pinSalt,
-      photo: photo || null,
-      encryptedVault: encryptedVault || { iv: "", data: "" }
+      pinHash,
+      photo: null,
+      vault: await encryptJson({ posts: [] }, pass, kdfSalt),
+      failed: 0,
+      lockUntil: 0
+    };
+    users.push(newUser);
+    writeUsers(users);
+    toast("", "Account created", "Welcome! Logging you in…");
+    await login(email, pass);
+  } else {
+    const idx = users.findIndex(u => u.email === email);
+    if(idx === -1){
+      generateCaptcha();
+      return toast("danger","Invalid credentials","Check your email, password, and PIN.");
+    }
+    const u = users[idx];
+
+    const now = Date.now();
+    if(u.lockUntil && now < u.lockUntil){
+      const secs = Math.ceil((u.lockUntil - now)/1000);
+      generateCaptcha();
+      return toast("warn","Temporarily locked", `Try again in ${secs}s.`);
+    }
+
+    const passHash = await sha256(pass + "|" + u.kdfSalt);
+    const pinHash  = await sha256(pin + "|" + u.pinSalt);
+
+    if(passHash !== u.passHash || pinHash !== u.pinHash){
+      u.failed = (u.failed || 0) + 1;
+      if(u.failed >= 5){
+        u.lockUntil = Date.now() + 60_000; // 1 minute lock after 5 attempts
+        u.failed = 0;
+      }
+      users[idx] = u;
+      writeUsers(users);
+      generateCaptcha();
+      return toast("danger","Invalid credentials","Check your email, password, and PIN.");
+    }
+
+    u.failed = 0; u.lockUntil = 0;
+    users[idx] = u; writeUsers(users);
+    toast("", "Welcome back", "Logging you in…");
+    await login(email, pass);
+  }
+});
+
+async function login(email, password){
+  sessionPassword = password;
+  writeCurrent({ email });
+
+  $("authSection").style.display = "none";
+  $("app").style.display = "block";
+
+  await hydrateUserUI();
+  showView("home");
+  await refreshAll();
+
+  toast("", "Welcome", "Session ready.");
+}
+
+async function hydrateUserUI(){
+  const me = getUser();
+  if(!me) return;
+
+  $("userGreet").innerText = me.name;
+  $("userEmailSmall").innerText = me.email;
+
+  $("profName").innerText = me.name;
+  $("profEmail").innerText = me.email;
+
+  const fallback = `https://ui-avatars.com/api/?background=10b981&color=fff&name=${encodeURIComponent(me.name || "User")}`;
+  $("userAvatar").src = me.photo || fallback;
+  $("topAvatar").src  = me.photo || fallback;
+
+  $("pinText").innerText = "••••••";
+  $("pinToggle").className = "fas fa-eye";
+  pinHidden = true;
+}
+
+/* ---------- Drawer / Navigation ---------- */
+function toggleDrawer(){
+  const side = $("sidebar");
+  const back = $("drawerBackdrop");
+  const open = !side.classList.contains("open");
+  side.classList.toggle("open", open);
+  back.classList.toggle("show", open);
+}
+function closeDrawer(){
+  $("sidebar").classList.remove("open");
+  $("drawerBackdrop").classList.remove("show");
+}
+function showView(v){
+  ["home","diary","stats","settings"].forEach(id => $("view-"+id).classList.add("hidden"));
+  $("view-"+v).classList.remove("hidden");
+  document.querySelectorAll(".nav a").forEach(a => a.classList.remove("active"));
+  $("nav-"+v).classList.add("active");
+  if(window.innerWidth <= 820) closeDrawer();
+
+  if(v === "stats") updateStats();
+}
+
+/* ---------- Current user ---------- */
+function getUser(){
+  const cur = readCurrent();
+  if(!cur?.email) return null;
+  return readUsers().find(u => u.email === cur.email) || null;
+}
+function upsertUser(updated){
+  const users = readUsers();
+  const idx = users.findIndex(u => u.email === updated.email);
+  if(idx !== -1) users[idx] = updated; else users.push(updated);
+  writeUsers(users);
+}
+async function openVault(){
+  const me = getUser();
+  if(!me) return { posts: [] };
+
+  // vault shape: {iv, data}
+  if(!me.vault || !me.vault.iv || !me.vault.data){
+    return { posts: [] };
+  }
+  try{
+    return await decryptJson(me.vault, sessionPassword, me.kdfSalt);
+  }catch(err){
+    // wrong password in memory or corrupted storage
+    toast("danger","Decrypt failed","Could not open encrypted diary. Logging out for safety.");
+    logout(false);
+    throw err;
+  }
+}
+async function saveVault(vault){
+  const me = getUser();
+  if(!me) return;
+  me.vault = await encryptJson(vault, sessionPassword, me.kdfSalt);
+  upsertUser(me);
+}
+
+/* ---------- PIN visibility ---------- */
+let pinHidden = true;
+
+function togglePinVisibility(){
+  const me = getUser();
+  console.log("Current User Data:", me); // Check F12 Console to see if 'pin' or 'password' exists here
+  
+  if(!me) {
+    toast("danger", "Error", "Could not find user data.");
+    return;
+  }
+
+  pinHidden = !pinHidden;
+
+  // FIX: Look for 'pin' or 'password' inside the 'me' object
+  const actualPin = me.pin || me.password || me.pass || "N/A";
+
+  // Update UI
+  $("pinText").innerText = pinHidden ? "••••••" : actualPin;
+  $("pinToggle").className = pinHidden ? "fas fa-eye" : "fas fa-eye-slash";
+
+  if(!pinHidden){
+    toast("warn", "Security Warning", "Your PIN is now visible.");
+  }
+}
+
+/* ---------- Diary model ---------- */
+function normalizeEntry(e){
+  const nowIso = new Date().toISOString();
+  return {
+    id: e.id || uuid(),
+    title: String(e.title || "").slice(0, 120),
+    body: String(e.body || ""),
+    mood: e.mood || "😐 Neutral",
+    tags: Array.isArray(e.tags) ? e.tags : [],
+    date: e.date || nowIso.slice(0,10), // YYYY-MM-DD
+    createdAt: e.createdAt || nowIso,
+    editedAt: e.editedAt || "",
+    image: e.image || null
+  };
+}
+function extractInlineTags(text){
+  const matches = (text.match(/(^|\s)#([a-zA-Z0-9_\-]{2,})/g) || [])
+    .map(m => m.trim().replace("#","").toLowerCase());
+  return Array.from(new Set(matches));
+}
+
+/* ---------- Quick add ---------- */
+async function quickSave(){
+  const title = ($("quickTitle").value || "").trim();
+  const mood = $("quickMood").value;
+  const tags = ($("quickTags").value || "").split(",").map(t => t.trim()).filter(Boolean).map(t => t.toLowerCase());
+  const body = ($("quickBody").value || "").trim();
+  if(!body && !title) return toast("warn","Empty entry","Write something first.");
+
+  const inline = extractInlineTags(body);
+  const mergedTags = Array.from(new Set([...tags, ...inline]));
+
+  const vault = await openVault();
+  vault.posts = Array.isArray(vault.posts) ? vault.posts : [];
+  vault.posts.push(normalizeEntry({ title, mood, tags: mergedTags, body, date: new Date().toISOString().slice(0,10) }));
+
+  await saveVault(vault);
+
+  $("quickTitle").value = "";
+  $("quickTags").value = "";
+  $("quickBody").value = "";
+
+  toast("", "Saved", "Quick memory added.");
+  await refreshAll();
+}
+
+/* ---------- Editor modal ---------- */
+let editingId = null;
+let editingImageB64 = null;
+
+function openEditor(entry){
+  editingId = entry?.id || null;
+  editingImageB64 = entry?.image || null;
+
+  $("editorTitle").innerText = editingId ? "Edit Entry" : "New Entry";
+  $("eTitle").value = entry?.title || "";
+  $("eMood").value = entry?.mood || "😐 Neutral";
+  $("eTags").value = (entry?.tags || []).join(", ");
+  $("eDate").value = entry?.date || new Date().toISOString().slice(0,10);
+  $("eBody").value = entry?.body || "";
+  $("eImage").value = "";
+  $("imagePreview").classList.toggle("hidden", !editingImageB64);
+  if(editingImageB64) $("imagePreview").src = editingImageB64;
+
+  updatePreview();
+  $("editorBackdrop").style.display = "flex";
+  $("eTitle").focus();
+}
+
+function closeEditor(){
+  $("editorBackdrop").style.display = "none";
+  editingId = null;
+  editingImageB64 = null;
+}
+
+function openAbout(){ $("aboutBackdrop").style.display = "flex"; }
+function closeAbout(){ $("aboutBackdrop").style.display = "none"; }
+
+function basicMarkdownToHtml(text){
+  let t = escapeHtml(text);
+
+  // headings
+  t = t.replace(/^###\s(.+)$/gm, "<h3>$1</h3>");
+  t = t.replace(/^##\s(.+)$/gm, "<h2>$1</h2>");
+  t = t.replace(/^#\s(.+)$/gm, "<h1>$1</h1>");
+
+  // blockquote
+  t = t.replace(/^>\s(.+)$/gm, "<blockquote>$1</blockquote>");
+
+  // bold
+  t = t.replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+
+  // inline code
+  t = t.replace(/`([^`]+)`/g, "<code>$1</code>");
+
+  // newlines
+  t = t.replace(/\n/g, "<br>");
+  return t;
+}
+function updatePreview(){
+  const body = $("eBody").value || "";
+  $("preview").innerHTML = body.trim() ? basicMarkdownToHtml(body) : "Start typing to see preview…";
+}
+$("eBody").addEventListener("input", updatePreview);
+
+function loadEntryImage(e){
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+
+  if(file.size > 1_000_000){
+    e.target.value = "";
+    return toast("warn","Image too large","Choose an image under ~1MB.");
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    editingImageB64 = reader.result;
+    $("imagePreview").src = editingImageB64;
+    $("imagePreview").classList.remove("hidden");
+    toast("", "Attached", "Image added to this entry.");
+  };
+  reader.readAsDataURL(file);
+}
+
+async function saveFromEditor(){
+  const title = ($("eTitle").value || "").trim();
+  const mood  = $("eMood").value;
+  const date  = $("eDate").value || new Date().toISOString().slice(0,10);
+  const tags  = ($("eTags").value || "").split(",").map(t => t.trim()).filter(Boolean).map(t => t.toLowerCase());
+  const body  = ($("eBody").value || "").trim();
+
+  if(!title && !body) return toast("warn","Empty entry","Add a title or body.");
+  const inline = extractInlineTags(body);
+  const mergedTags = Array.from(new Set([...tags, ...inline]));
+
+  const vault = await openVault();
+  vault.posts = Array.isArray(vault.posts) ? vault.posts : [];
+
+  if(editingId){
+    const idx = vault.posts.findIndex(p => p.id === editingId);
+    if(idx === -1) return toast("danger","Missing entry","Could not find entry to edit.");
+    const prev = normalizeEntry(vault.posts[idx]);
+    vault.posts[idx] = normalizeEntry({
+      ...prev,
+      title, mood, date,
+      tags: mergedTags,
+      body,
+      image: editingImageB64 || null,
+      editedAt: new Date().toISOString()
     });
-    
-    await user.save();
-    console.log(`✅ New user created: ${email}`);
-    res.json(cleanUser(user));
-    
-  } catch (err) {
-    console.error("Signup error:", err);
-    res.status(500).json({ error: "Server error during signup" });
+    toast("", "Updated", "Entry saved.");
+  } else {
+    vault.posts.push(normalizeEntry({
+      title, mood, date, tags: mergedTags, body, image: editingImageB64 || null
+    }));
+    toast("", "Saved", "New entry added.");
   }
-});
 
-// Login
-app.post("/api/login", async (req, res) => {
-  try {
-    const { email, passwordHash, pinHash } = req.body;
-    
-    const user = await User.findOne({ email: email.toLowerCase() });
-    if (!user) {
-      return res.status(401).json({ error: "Invalid credentials" });
-    }
-    
-    if (user.passwordHash !== passwordHash || user.pinHash !== pinHash) {
-      return res.status(401).json({ error: "Invalid email, password, or PIN" });
-    }
-    
-    user.lastSync = new Date();
-    await user.save();
-    
-    console.log(`✅ User logged in: ${email}`);
-    res.json(cleanUser(user));
-    
-  } catch (err) {
-    console.error("Login error:", err);
-    res.status(500).json({ error: "Server error during login" });
-  }
-});
+  await saveVault(vault);
+  closeEditor();
+  await refreshAll();
+}
 
-// Find user by email (returns salts only for login)
-app.post("/api/user/find", async (req, res) => {
-  try {
-    const { email } = req.body;
-    const user = await User.findOne({ email: email.toLowerCase() });
-    
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    
-    // Only return what's needed for login (salts)
-    res.json({
-      email: user.email,
-      kdfSalt: user.kdfSalt,
-      pinSalt: user.pinSalt
-    });
-  } catch (err) {
-    console.error("Find user error:", err);
-    res.status(500).json({ error: err.message });
-  }
-});
+/* ---------- Diary render ---------- */
+async function renderDiary(){
+  const vault = await openVault();
+  const posts = (vault.posts || []).map(normalizeEntry);
 
-// Update user data
-app.post("/api/user/update", async (req, res) => {
-  try {
-    const { email, encryptedVault, photo, name } = req.body;
-    
-    const user = await User.findOne({ email: email.toLowerCase() });
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    
-    if (encryptedVault) user.encryptedVault = encryptedVault;
-    if (photo !== undefined) user.photo = photo;
-    if (name) user.name = name;
-    user.lastSync = new Date();
-    
-    await user.save();
-    
-    console.log(`✅ User updated: ${email}`);
-    res.json({ 
-      message: "User updated",
-      user: cleanUser(user)
-    });
-    
-  } catch (err) {
-    console.error("Update error:", err);
-    res.status(500).json({ error: "Server error during update" });
-  }
-});
+  const term = ($("diarySearch").value || "").trim().toLowerCase();
+  const sortMode = $("sortMode").value;
+  const dateFilter = $("dateFilter").value;
+  const moodFilter = $("moodFilter").value;
 
-/* =========================
-   FRIEND SYSTEM ROUTES
-========================= */
+  posts.sort((a,b) => sortMode === "oldest"
+    ? new Date(a.createdAt) - new Date(b.createdAt)
+    : new Date(b.createdAt) - new Date(a.createdAt)
+  );
 
-// Send friend request
-app.post("/api/friends/request", async (req, res) => {
-  try {
-    const { userEmail, friendEmail } = req.body;
-    
-    const user = await User.findOne({ email: userEmail.toLowerCase() });
-    const friend = await User.findOne({ email: friendEmail.toLowerCase() });
-    
-    if (!user || !friend) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    
-    if (user._id.toString() === friend._id.toString()) {
-      return res.status(400).json({ error: "Cannot add yourself" });
-    }
-    
-    // Check if already friends
-    if (user.friends.includes(friend._id)) {
-      return res.status(400).json({ error: "Already friends" });
-    }
-    
-    // Check if request already exists
-    const existingRequest = friend.friendRequests.find(
-      req => req.from.toString() === user._id.toString() && req.status === 'pending'
-    );
-    
-    if (existingRequest) {
-      return res.status(400).json({ error: "Friend request already sent" });
-    }
-    
-    // Add friend request
-    friend.friendRequests.push({ 
-      from: user._id, 
-      fromEmail: user.email,
-      status: 'pending',
-      createdAt: new Date()
-    });
-    await friend.save();
-    
-    console.log(`✅ Friend request sent: ${user.email} -> ${friend.email}`);
-    res.json({ message: "Friend request sent" });
-    
-  } catch (err) {
-    console.error("Friend request error:", err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-// Accept friend request
-app.post("/api/friends/accept", async (req, res) => {
-  try {
-    const { userEmail, requestId } = req.body;
-    
-    const user = await User.findOne({ email: userEmail.toLowerCase() });
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    
-    const request = user.friendRequests.id(requestId);
-    if (!request) {
-      return res.status(404).json({ error: "Request not found" });
-    }
-    
-    request.status = 'accepted';
-    
-    // Add to user's friends list
-    user.friends.push(request.from);
-    await user.save();
-    
-    // Add to requester's friends list
-    const requester = await User.findById(request.from);
-    if (requester && !requester.friends.includes(user._id)) {
-      requester.friends.push(user._id);
-      await requester.save();
-    }
-    
-    console.log(`✅ Friend request accepted: ${userEmail}`);
-    res.json({ message: "Friend request accepted" });
-    
-  } catch (err) {
-    console.error("Accept friend error:", err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-// Get friends list
-app.post("/api/friends/list", async (req, res) => {
-  try {
-    const { userEmail } = req.body;
-    
-    const user = await User.findOne({ email: userEmail.toLowerCase() })
-      .populate('friends', 'email name photo');
-    
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    
-    res.json({ friends: user.friends });
-    
-  } catch (err) {
-    console.error("Get friends error:", err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-// Get pending friend requests
-app.post("/api/friends/requests", async (req, res) => {
-  try {
-    const { userEmail } = req.body;
-    
-    const user = await User.findOne({ email: userEmail.toLowerCase() })
-      .populate('friendRequests.from', 'email name photo');
-    
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    
-    const pendingRequests = user.friendRequests.filter(req => req.status === 'pending');
-    res.json({ requests: pendingRequests });
-    
-  } catch (err) {
-    console.error("Get requests error:", err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-/* =========================
-   SHARING ROUTES
-========================= */
-
-// Share entry with friend
-app.post("/api/share", async (req, res) => {
-  try {
-    const { fromEmail, toEmail, title, body, mood, date, image, tags } = req.body;
-    
-    const fromUser = await User.findOne({ email: fromEmail.toLowerCase() });
-    const toUser = await User.findOne({ email: toEmail.toLowerCase() });
-    
-    if (!fromUser || !toUser) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    
-    if (!fromUser.friends.includes(toUser._id)) {
-      return res.status(403).json({ error: "Not friends with this user" });
-    }
-    
-    const sharedEntry = new SharedEntry({
-      from: fromUser._id,
-      to: toUser._id,
-      fromEmail: fromEmail.toLowerCase(),
-      toEmail: toEmail.toLowerCase(),
-      title: title || "",
-      body: body || "",
-      mood: mood || "",
-      date: date || "",
-      image: image || null,
-      tags: tags || []
-    });
-    
-    await sharedEntry.save();
-    
-    console.log(`✅ Entry shared: ${fromEmail} -> ${toEmail}`);
-    res.json({ message: "Entry shared successfully", id: sharedEntry._id });
-    
-  } catch (err) {
-    console.error("Share error:", err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-// Get shared entries (inbox)
-app.post("/api/shared/inbox", async (req, res) => {
-  try {
-    const { userEmail } = req.body;
-    
-    const sharedEntries = await SharedEntry.find({ toEmail: userEmail.toLowerCase() })
-      .sort({ sharedAt: -1 });
-    
-    res.json({ shared: sharedEntries });
-    
-  } catch (err) {
-    console.error("Get inbox error:", err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-/* =========================
-   SYNC ROUTES
-========================= */
-
-// Pull latest data from server
-app.post("/api/sync/pull", async (req, res) => {
-  try {
-    const { email } = req.body;
-    const user = await User.findOne({ email: email.toLowerCase() });
-    
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    
-    res.json({
-      encryptedVault: user.encryptedVault,
-      lastSync: user.lastSync
-    });
-  } catch (err) {
-    console.error("Pull error:", err);
-    res.status(500).json({ error: "Pull failed" });
-  }
-});
-
-// Push local changes to server
-app.post("/api/sync/push", async (req, res) => {
-  try {
-    const { email, encryptedVault } = req.body;
-    const user = await User.findOne({ email: email.toLowerCase() });
-    
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    
-    user.encryptedVault = encryptedVault;
-    user.lastSync = new Date();
-    await user.save();
-    
-    console.log(`✅ Sync push from: ${email}`);
-    res.json({ 
-      message: "Changes pushed successfully",
-      lastSync: user.lastSync
-    });
-  } catch (err) {
-    console.error("Push error:", err);
-    res.status(500).json({ error: "Push failed" });
-  }
-});
-
-/* =========================
-   HEALTH CHECK
-========================= */
-
-app.get("/api/health", (req, res) => {
-  const dbStatus = mongoose.connection.readyState === 1 ? "connected" : "disconnected";
-  res.json({ 
-    status: "ok", 
-    db: dbStatus,
-    timestamp: new Date().toISOString()
+  const filtered = posts.filter(p => {
+    const hay = (p.title + " " + p.body + " " + (p.tags || []).join(" ")).toLowerCase();
+    const okTerm = !term || hay.includes(term);
+    const okDate = !dateFilter || p.date === dateFilter;
+    const okMood = !moodFilter || p.mood === moodFilter;
+    return okTerm && okDate && okMood;
   });
+
+  $("entryCount").innerText = `${posts.length} entries`;
+
+  if(filtered.length === 0){
+    $("diaryContainer").innerHTML = `<div class="card empty">No matching entries found.</div>`;
+    return;
+  }
+
+  $("diaryContainer").innerHTML = filtered.map(p => {
+    const tags = (p.tags || []).slice(0, 8).map(t => `<span class="chip"><i class="fas fa-hashtag"></i> ${escapeHtml(t)}</span>`).join("");
+    const meta = `${escapeHtml(p.date)} • ${escapeHtml(p.mood)}${p.editedAt ? " • edited" : ""}`;
+    const img = p.image ? `<img class="thumb" src="${p.image}" alt="attachment">` : "";
+    return `
+      <div class="card">
+        <div class="entry">
+          <div style="flex:1;">
+            <small>${meta}</small>
+            ${p.title ? `<h4>${escapeHtml(p.title)}</h4>` : ""}
+            <p>${escapeHtml(p.body)}</p>
+            ${img}
+            <div class="chips">${tags}</div>
+          </div>
+          <div class="entry-actions">
+            <button class="iconbtn" title="Share with Friend" onclick="shareToFriend('${p.id}')">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+            <button class="iconbtn" title="Edit" onclick="editEntry('${p.id}')"><i class="fas fa-pen"></i></button>
+            <button class="iconbtn danger" title="Delete" onclick="deleteEntry('${p.id}')"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+async function editEntry(id){
+  const vault = await openVault();
+  const posts = (vault.posts || []).map(normalizeEntry);
+  const entry = posts.find(p => p.id === id);
+  if(!entry) return toast("danger","Missing entry","Could not find that entry.");
+  openEditor(entry);
+}
+
+async function deleteEntry(id){
+  if(!confirm("Delete this entry?")) return;
+  const vault = await openVault();
+  vault.posts = (vault.posts || []).filter(p => p.id !== id);
+  await saveVault(vault);
+  toast("", "Deleted", "Entry removed.");
+  await refreshAll();
+}
+
+/* ---------- Stats ---------- */
+async function updateStats(){
+  const vault = await openVault();
+  const posts = (vault.posts || []).map(normalizeEntry);
+  $("kpiTotal").innerText = String(posts.length);
+
+  // current streak
+  const dates = new Set(posts.map(p => p.date));
+  let streak = 0;
+  for(let d = new Date(); ; ){
+    const iso = d.toISOString().slice(0,10);
+    if(dates.has(iso)) streak++;
+    else break;
+    d.setDate(d.getDate()-1);
+  }
+  $("kpiStreak").innerText = String(streak);
+
+  // this month
+  const now = new Date();
+  const ym = now.toISOString().slice(0,7); // YYYY-MM
+  const thisMonth = posts.filter(p => (p.date || "").slice(0,7) === ym).length;
+  $("kpiThisMonth").innerText = String(thisMonth);
+
+  drawChart(posts);
+}
+
+function drawChart(posts){
+  const c = $("chart");
+  const ctx = c.getContext("2d");
+
+  // device pixel ratio scaling for crispness
+  const dpr = window.devicePixelRatio || 1;
+  const cssW = c.clientWidth || 600;
+  const cssH = c.clientHeight || 160;
+  c.width = Math.floor(cssW * dpr);
+  c.height = Math.floor(cssH * dpr);
+  ctx.scale(dpr, dpr);
+
+  // build last 12 months buckets
+  const now = new Date();
+  const labels = [];
+  const counts = [];
+  for(let i=11;i>=0;i--){
+    const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+    const key = d.toISOString().slice(0,7);
+    labels.push(key);
+    counts.push(posts.filter(p => (p.date || "").slice(0,7) === key).length);
+  }
+
+  const W = cssW, H = cssH;
+  ctx.clearRect(0,0,W,H);
+
+  // axes
+  const pad = 18;
+  const max = Math.max(1, ...counts);
+  const barW = (W - pad*2) / counts.length;
+
+  // grid lines
+  ctx.globalAlpha = 0.25;
+  ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue("--border");
+  for(let i=0;i<=4;i++){
+    const y = pad + (H - pad*2) * (i/4);
+    ctx.beginPath();
+    ctx.moveTo(pad, y);
+    ctx.lineTo(W-pad, y);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+
+  // bars (default fill style, no explicit color requirement)
+  for(let i=0;i<counts.length;i++){
+    const v = counts[i];
+    const bh = (H - pad*2) * (v / max);
+    const x = pad + i*barW + 6;
+    const y = H - pad - bh;
+    const bw = Math.max(6, barW - 12);
+
+    // subtle bar fill based on current theme via rgba from primary
+    const primary = getComputedStyle(document.documentElement).getPropertyValue("--primary").trim() || "#10b981";
+    ctx.fillStyle = hexToRgba(primary, 0.6);
+    ctx.fillRect(x, y, bw, bh);
+
+    ctx.fillStyle = hexToRgba(primary, 0.95);
+    ctx.fillRect(x, y+bh-3, bw, 3);
+  }
+
+  // label minimal (first, middle, last)
+  ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--muted");
+  ctx.font = "12px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+  const showIdx = new Set([0, 5, 11]);
+  labels.forEach((lab,i)=>{
+    if(!showIdx.has(i)) return;
+    const x = pad + i*barW + 6;
+    ctx.fillText(lab, x, H - 4);
+  });
+}
+function hexToRgba(hex, a){
+  const h = hex.replace("#","").trim();
+  const full = h.length===3 ? h.split("").map(c=>c+c).join("") : h.padEnd(6,"0").slice(0,6);
+  const r = parseInt(full.slice(0,2),16);
+  const g = parseInt(full.slice(2,4),16);
+  const b = parseInt(full.slice(4,6),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+/* ---------- Profile photo ---------- */
+function uploadPhoto(e){
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+  if(file.size > 2_000_000){
+    e.target.value = "";
+    return toast("warn","Too large","Please choose an image under 2MB.");
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    const me = getUser();
+    if(!me) return;
+    me.photo = reader.result;
+    upsertUser(me);
+    hydrateUserUI();
+    toast("", "Updated", "Profile photo updated.");
+    e.target.value = "";
+  };
+  reader.readAsDataURL(file);
+}
+function resetPhoto(){
+  const me = getUser();
+  if(!me) return;
+  me.photo = null;
+  upsertUser(me);
+  hydrateUserUI();
+  toast("", "Reset", "Profile photo reset.");
+}
+
+/* ---------- Export / Import ---------- */
+async function exportData(){
+  const me = getUser();
+  if(!me) return;
+
+  // export encrypted vault; no password included
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    app: "My Life Journal",
+    user: {
+      id: me.id, name: me.name, email: me.email,
+      kdfSalt: me.kdfSalt,
+      passHash: me.passHash,
+      pinSalt: me.pinSalt,
+      pinHash: me.pinHash,
+      photo: me.photo || null,
+      vault: me.vault || {iv:"",data:""}
+    }
+  };
+
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `journal_backup_${(me.name || "user").replaceAll(" ","_")}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+
+  toast("", "Exported", "Encrypted backup downloaded.");
+}
+
+function importData(event){
+  const file = event.target.files && event.target.files[0];
+  if(!file) return;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const data = JSON.parse(reader.result);
+      if(!data?.user?.email || !data.user.vault) throw new Error("Invalid file");
+
+      const users = readUsers();
+      const incoming = data.user;
+      const idx = users.findIndex(u => u.email === String(incoming.email).toLowerCase());
+
+      // For safety, import exactly as is (still encrypted); you must know the password to decrypt after login.
+      const imported = {
+        id: incoming.id || uuid(),
+        name: incoming.name || "User",
+        email: String(incoming.email).toLowerCase(),
+        kdfSalt: incoming.kdfSalt,
+        passHash: incoming.passHash,
+        pinSalt: incoming.pinSalt,
+        pinHash: incoming.pinHash,
+        photo: incoming.photo || null,
+        vault: incoming.vault,
+        failed: 0,
+        lockUntil: 0
+      };
+
+      if(idx !== -1) users[idx] = imported;
+      else users.push(imported);
+
+      writeUsers(users);
+      toast("", "Imported", "Backup restored. Log in using the same password + PIN from that backup.");
+    }catch(err){
+      toast("danger","Import failed","That file doesn't look like a Journal backup.");
+    } finally {
+      event.target.value = "";
+    }
+  };
+  reader.readAsText(file);
+}
+
+/* ---------- Wipe ---------- */
+async function wipeMyData(){
+  const me = getUser();
+  if(!me) return;
+  if(!confirm("This will delete your account + encrypted diary. Continue?")) return;
+
+  let users = readUsers();
+  users = users.filter(u => u.email !== me.email);
+  writeUsers(users);
+  localStorage.removeItem(LS_CURRENT);
+  toast("", "Deleted", "Your data was removed.");
+  logout(false);
+}
+
+/* ---------- Logout ---------- */
+function logout(showToast){
+  if(showToast) toast("", "Logged out", "See you next time!");
+  sessionPassword = "";
+  localStorage.removeItem(LS_CURRENT);
+  location.reload();
+}
+
+/* ---------- Refresh ---------- */
+async function refreshAll(){
+  await renderDiary();
+  await updateStats();
+}
+
+/* ---------- Keyboard shortcuts ---------- */
+document.addEventListener("keydown", (e) => {
+  // Ctrl+K quick focus/open editor from app
+  if(e.ctrlKey && e.key.toLowerCase() === "k"){
+    const inApp = $("app").style.display !== "none";
+    if(inApp){
+      e.preventDefault();
+      openEditor();
+    }
+  }
+  // Editor shortcuts
+  if($("editorBackdrop").style.display === "flex"){
+    if(e.key === "Escape"){
+      e.preventDefault();
+      closeEditor();
+    }
+    if(e.ctrlKey && e.key === "Enter"){
+      e.preventDefault();
+      saveFromEditor();
+    }
+  }
 });
 
-/* =========================
-   STATIC FILES & FRONTEND
-========================= */
+window.renderSharedInbox = function() {
+    const currentUser = readCurrent();
+    if (!currentUser) return;
 
-// Serve static files from 'public' directory
-app.use(express.static(path.join(__dirname, "public")));
+    const sharedPool = JSON.parse(localStorage.getItem('journal_ultra_shared_posts')) || [];
+    const container = document.getElementById('sharedInboxContainer'); 
 
-// Serve index.html for all other routes (SPA support)
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+    if (!container) return;
+
+    const myInbox = sharedPool.filter(post => 
+        post.to.toLowerCase().trim() === currentUser.email.toLowerCase().trim()
+    );
+
+    if (myInbox.length === 0) {
+        container.innerHTML = '<p class="muted" style="text-align:center; padding:20px;">No entries shared with you yet.</p>';
+        return;
+    }
+
+    container.innerHTML = myInbox.map(post => `
+        <div class="card" style="background: rgba(255,255,255,0.05); margin-bottom: 10px; border-left: 3px solid var(--primary);">
+            <div style="display:flex; justify-content:space-between;">
+                <small>From: <b>${post.from}</b></small>
+                <small class="muted">${new Date(post.sharedAt).toLocaleDateString()}</small>
+            </div>
+            <h4 style="margin: 8px 0;">${post.title}</h4>
+            <p style="font-size: 0.9rem;">${post.body}</p>
+            ${post.image ? `<img src="${post.image}" style="width:100px; border-radius:5px; margin-top:5px;"/>` : ''}
+        </div>
+    `).join('');
+};
+
+/* ------------ FRIENDS SYSTEM (GLOBAL) -----------*/
+
+// 1. Navigation & View Switcher
+window.showView = function(tab) {
+    const views = ['home', 'diary', 'stats', 'settings', 'friends']; 
+    views.forEach(v => {
+        const el = $( 'view-' + v);
+        const nav = $( 'nav-' + v); 
+        if(el) el.classList.add('hidden');
+        if(nav) nav.classList.remove('active');
+    });
+
+    const targetView = $('view-' + tab);
+    const targetNav = $('nav-' + tab);
+    if(targetView) targetView.classList.remove('hidden');
+    if(targetNav) targetNav.classList.add('active');
+
+    if(window.innerWidth <= 820) closeDrawer();
+
+    if (tab === 'friends') {
+        window.checkIncomingRequests(); 
+        window.renderFriendsList();
+    }
+    if (tab === "stats") updateStats();
+    if (tab === 'friends') {
+        // This forces the box to check for new messages every time you click "Friends"
+        if (window.renderSharedInbox) window.renderSharedInbox();
+    }
+};
+
+// 2. Action: Send Friend Request
+window.addFriendAction = function() {
+    const emailInput = $("friendEmail");
+    const targetEmail = emailInput.value.trim().toLowerCase();
+    const currentUser = readCurrent();
+    const allUsers = readUsers();
+
+    if (!targetEmail) return toast("danger", "Error", "Please enter an email.");
+    if (targetEmail === currentUser.email.toLowerCase()) return toast("danger", "Error", "You cannot add yourself.");
+
+    const foundUser = allUsers.find(u => u.email.toLowerCase() === targetEmail);
+    if (!foundUser) return toast("danger", "Not Found", "User does not exist.");
+
+    let requests = JSON.parse(localStorage.getItem('journal_ultra_requests')) || [];
+    if (requests.find(r => r.from === currentUser.email && r.to === targetEmail)) {
+        return toast("warn", "Pending", "Request already sent.");
+    }
+
+    requests.push({ from: currentUser.email, to: targetEmail, status: 'pending', timestamp: Date.now() });
+    localStorage.setItem('journal_ultra_requests', JSON.stringify(requests));
+    
+    toast("success", "Success", "Request sent to " + (foundUser.name || targetEmail));
+    emailInput.value = "";
+};
+
+// 3. UI: Render Pending Requests
+window.checkIncomingRequests = function() {
+    const currentUser = readCurrent();
+    if (!currentUser) return;
+    const allRequests = JSON.parse(localStorage.getItem('journal_ultra_requests')) || [];
+    const myEmail = currentUser.email.toLowerCase().trim();
+
+    const myIncoming = allRequests.filter(req => req.to.toLowerCase().trim() === myEmail && req.status === 'pending');
+    const container = $("pendingRequests");
+    if (!container) return;
+
+    if (myIncoming.length === 0) {
+        container.innerHTML = '<p class="muted" style="text-align:center; padding:10px;">No new requests.</p>';
+        return;
+    }
+
+    container.innerHTML = myIncoming.map(req => `
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px;">
+            <span><strong>${escapeHtml(req.from)}</strong></span>
+            <button class="btn-inline" onclick="acceptFriend('${req.from}')"><i class="fas fa-check"></i> Accept</button>
+        </div>
+    `).join('');
+};
+
+// 4. Action: Accept Friend
+window.acceptFriend = function(senderEmail) {
+    let allRequests = JSON.parse(localStorage.getItem('journal_ultra_requests')) || [];
+    const currentUser = readCurrent();
+
+    allRequests = allRequests.map(req => {
+        if (req.from === senderEmail && req.to === currentUser.email) return { ...req, status: 'accepted' };
+        return req;
+    });
+
+    localStorage.setItem('journal_ultra_requests', JSON.stringify(allRequests));
+    toast("success", "Accepted", "You are now friends!");
+    window.checkIncomingRequests();
+    window.renderFriendsList(); 
+};
+
+// 5. UI: Render Confirmed Friends
+window.renderFriendsList = function() {
+    const currentUser = readCurrent();
+    const allRequests = JSON.parse(localStorage.getItem('journal_ultra_requests')) || [];
+    const listContainer = $("confirmedFriendsList");
+    if (!listContainer || !currentUser) return;
+
+    const myFriends = allRequests.filter(req => {
+        return req.status === 'accepted' && 
+               (req.to.toLowerCase() === currentUser.email.toLowerCase() || 
+                req.from.toLowerCase() === currentUser.email.toLowerCase());
+    });
+
+    if (myFriends.length === 0) {
+        listContainer.innerHTML = '<p class="muted" style="text-align:center; padding:10px;">No friends added yet.</p>';
+        return;
+    }
+
+    listContainer.innerHTML = myFriends.map(req => {
+        const friendEmail = req.from.toLowerCase() === currentUser.email.toLowerCase() ? req.to : req.from;
+        return `
+            <div style="display: flex; align-items: center; gap: 12px; padding: 10px; border-bottom: 1px solid var(--border);">
+                <div style="width: 35px; height: 35px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                    ${friendEmail.charAt(0).toUpperCase()}
+                </div>
+                <div style="font-weight: 500;">${escapeHtml(friendEmail)}</div>
+            </div>
+        `;
+    }).join('');
+};
+
+async function shareWithFriend(postId) {
+    const friendEmail = prompt("Enter friend's email:");
+    if (!friendEmail) return;
+
+    const vault = await openVault();
+    const entry = vault.posts.find(p => p.id === postId);
+
+    const sharedEntry = {
+        from: getUser().email,
+        to: friendEmail.toLowerCase(),
+        content: entry, // This sends the title, body, and mood
+        timestamp: Date.now()
+    };
+
+    let pool = JSON.parse(localStorage.getItem('journal_ultra_shared')) || [];
+    pool.push(sharedEntry);
+    localStorage.setItem('journal_ultra_shared', JSON.stringify(pool));
+    toast("success", "Sent!", "Entry shared with " + friendEmail);
+}
+
+async function shareToFriend(postId) {
+    const friendEmail = prompt("Enter the friend's email to share this entry:");
+    if (!friendEmail) return;
+
+    const vault = await openVault();
+    const entry = vault.posts.find(p => p.id === postId);
+    if (!entry) return toast("danger", "Error", "Entry not found.");
+
+    const sharedData = {
+        from: readCurrent().email,
+        to: friendEmail.toLowerCase().trim(),
+        title: entry.title,
+        body: entry.body,
+        mood: entry.mood,
+        date: entry.date,
+        image: entry.image,
+        sharedAt: new Date().toISOString()
+    };
+
+    let sharedPool = JSON.parse(localStorage.getItem('journal_ultra_shared_posts')) || [];
+    sharedPool.push(sharedData);
+    localStorage.setItem('journal_ultra_shared_posts', JSON.stringify(sharedPool));
+
+    toast("success", "Shared!", `Entry "${entry.title}" sent to ${friendEmail}`);
+}
+
+/* ---------- Boot ---------- */
+window.addEventListener("load", async () => {
+    generateCaptcha();
+    toggleMode("login");
+
+    const cur = readCurrent();
+    if(cur?.email){
+        $("email").value = cur.email;
+        toast("warn","Session found","Enter password + PIN to unlock.");
+    }
+
+if (window.checkIncomingRequests) window.checkIncomingRequests();
+  });
+
+async function shareToFriend(postId) {
+    const friendEmail = prompt("Enter the friend's email (e.g., example@gmail.com):");
+    if (!friendEmail) return;
+
+    // 1. Get the entry from your encrypted vault
+    const vault = await openVault();
+    const entry = vault.posts.find(p => p.id === postId);
+    if (!entry) return toast("danger", "Error", "Entry not found.");
+
+    // 2. Create the shared data package
+    const sharedData = {
+        from: getUser().email,
+        to: friendEmail.toLowerCase().trim(),
+        title: entry.title,
+        body: entry.body,
+        mood: entry.mood,
+        date: entry.date,
+        tags: entry.tags,
+        image: entry.image, // Includes the image if one exists
+        timestamp: Date.now()
+    };
+
+    // 3. Save to a separate shared storage pool
+    let sharedPool = JSON.parse(localStorage.getItem('journal_ultra_shared_posts')) || [];
+    sharedPool.push(sharedData);
+    localStorage.setItem('journal_ultra_shared_posts', JSON.stringify(sharedPool));
+
+    toast("success", "Shared!", "Entry sent to " + friendEmail);
+}
+
+app.post('/api/friends/request', auth, (req, res) => {
+  const { email } = req.body;
+  const target = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
+
+  if(!target) return res.status(404).json({ error: 'User not found' });
+  if(target.id === req.user.id) return res.status(400).json({ error: 'Cannot add yourself' });
+
+  db.prepare(`
+    INSERT INTO friend_requests (from_user, to_user)
+    VALUES (?, ?)
+  `).run(req.user.id, target.id);
+
+  res.json({ ok: true });
 });
 
-/* =========================
-   START SERVER
-========================= */
+app.post('/api/friends/accept', auth, (req, res) => {
+  const { requestId } = req.body;
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`\n🚀 Server running on http://localhost:${PORT}`);
-  console.log(`📡 API available at http://localhost:${PORT}/api`);
-  console.log(`📁 Frontend served from /public folder`);
+  const reqRow = db.prepare('SELECT * FROM friend_requests WHERE id = ?').get(requestId);
+  if(!reqRow) return res.status(404).json({ error: 'Request not found' });
+
+  db.prepare('UPDATE friend_requests SET status = ? WHERE id = ?')
+    .run('accepted', requestId);
+
+  db.prepare('INSERT INTO friends (user_id, friend_id) VALUES (?, ?)')
+    .run(reqRow.from_user, reqRow.to_user);
+
+  db.prepare('INSERT INTO friends (user_id, friend_id) VALUES (?, ?)')
+    .run(reqRow.to_user, reqRow.from_user);
+
+  res.json({ ok: true });
 });
+
+app.get('/api/friends', auth, (req, res) => {
+  const rows = db.prepare(`
+    SELECT u.id, u.name, u.email
+    FROM friends f
+    JOIN users u ON u.id = f.friend_id
+    WHERE f.user_id = ?
+  `).all(req.user.id);
+
+  res.json({ friends: rows });
+});
+
+app.get('/api/friends/requests', auth, (req, res) => {
+  const rows = db.prepare(`
+    SELECT fr.id, u.name, u.email
+    FROM friend_requests fr
+    JOIN users u ON u.id = fr.from_user
+    WHERE fr.to_user = ? AND fr.status = 'pending'
+  `).all(req.user.id);
+
+  res.json({ requests: rows });
+});
+
+async function addFriend(){
+  const email = prompt("Enter friend's email:");
+  if(!email) return;
+
+  try{
+    await api('/friends/request', {
+      method:'POST',
+      body: JSON.stringify({ email })
+    });
+    toast('', 'Sent', 'Friend request sent!');
+  }catch(err){
+    toast('danger','Error', err.message);
+  }
+}
+
+async function loadFriends(){
+  const out = await api('/friends');
+  const list = out.friends;
+
+  $("friendsList").innerHTML = list.map(f => `
+    <div class="card">${f.name} (${f.email})</div>
+  `).join('');
+}
+
+async function loadRequests(){
+  const out = await api('/friends/requests');
+
+  $("requestsList").innerHTML = out.requests.map(r => `
+    <div class="card">
+      ${r.name}
+      <button onclick="acceptReq(${r.id})">Accept</button>
+    </div>
+  `).join('');
+}
+
+async function acceptReq(id){
+  await api('/friends/accept', {
+    method:'POST',
+    body: JSON.stringify({ requestId:id })
+  });
+  loadRequests();
+  loadFriends();
+}
+
 </script>
+<script src="app.js"></script>
 </body>
 </html>
