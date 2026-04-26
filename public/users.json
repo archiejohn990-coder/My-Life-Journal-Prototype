@@ -1,3 +1,16 @@
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+mongoose.connect("YOUR_MONGO_URL")
+  .then(() => console.log("DB Connected"))
+  .catch(err => console.log(err));
+
 const userSchema = new mongoose.Schema({
   username: String,
   password: String
@@ -13,4 +26,8 @@ app.post("/signup", async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+app.listen(3000, () => {
+  console.log("Server running");
 });
