@@ -750,6 +750,61 @@
     toggleMode("login");
     let savedUser=getCurrentUser();
     if(savedUser && savedUser.email){ $("email").value=savedUser.email; toast("info","Session","Enter password to unlock"); }
+    // Auto-sync function - call after every save
+async function syncToCloud() {
+  const user = getCurrentUser();
+  if (!user) return;
+  
+  const vault = await openVault();
+  try {
+    await fetch(`${API_URL}/api/sync/push`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: user.email,
+        encryptedVault: user.encryptedVault
+      })
+    });
+    console.log("✅ Synced to cloud");
+  } catch (e) {
+    console.error("Sync failed:", e);
+  }
+}
+
+// Check for updates from other devices
+async function checkForUpdates() {
+  const user = getCurrentUser();
+  if (!user) return;
+  
+  try {
+    const res = await fetch(`${API_URL}/api/sync/pull`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: user.email })
+    });
+    const data = await res.json();
+    
+    if (data.encryptedVault && data.encryptedVault.iv) {
+      // Update local vault from cloud
+      user.encryptedVault = data.encryptedVault;
+      setCurrentUser(user);
+      await renderDiary();
+      toast("info", "Sync", "Your data has been updated from another device");
+    }
+  } catch (e) {
+    console.error("Check updates failed:", e);
+  }
+}
+
+// Call checkForUpdates every 30 seconds
+setInterval(checkForUpdates, 30000);
+
+// Modify your save functions to sync
+const originalSaveVault = saveVault;
+window.saveVault = async function(vault) {
+  await originalSaveVault(vault);
+  await syncToCloud();
+};
   </script>
 </body>
 </html>
