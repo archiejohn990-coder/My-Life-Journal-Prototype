@@ -471,3 +471,10 @@ document.addEventListener("DOMContentLoaded", () => {
     body: JSON.stringify({ userId, friendId })
   });
 }
+async function createJournal(userId, title, content) {
+  await fetch("/journal", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ userId, title, content })
+  });
+}
