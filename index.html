@@ -772,38 +772,40 @@ html {
 
         <!-- FRIENDS -->
         <section id="view-friends" class="hidden">
-    <h1>My Friends</h1>
+          <h1>My Friends</h1>
 
-    <div class="card" style="text-align: center; padding: 40px;">
-        <i class="fas fa-user-plus fa-3x" style="color: var(--primary); margin-bottom: 15px;"></i>
-        <h3>Add a Friend</h3>
-        <p class="muted">Connect with other journal users.</p>
-        
-        <div style="max-width: 400px; margin: 20px auto;">
-            <input type="email" id="friendEmail" class="input" placeholder="friend@example.com">
-            <div class="button-row-center" style="margin-top: 25px;">
+          <div class="card" style="text-align: center; padding: 40px;">
+            <i class="fas fa-user-plus fa-3x" style="color: var(--primary); margin-bottom: 15px;"></i>
+            <h3>Add a Friend</h3>
+            <p class="muted">Connect with other journal users.</p>
+            
+            <div style="max-width: 400px; margin: 20px auto;">
+              <input type="email" id="friendEmail" class="input" placeholder="friend@example.com">
+              <div class="button-row-center" style="margin-top: 25px;">
                 <button class="btn-inline" onclick="addFriendAction()">
-                    <i class="fas fa-paper-plane"></i> Send Request
+                  <i class="fas fa-paper-plane"></i> Send Request
                 </button>
+              </div>
             </div>
-        </div>
-    </div>
-    <div class="card" style="margin-top: 20px; border-left: 4px solid var(--primary);">
-    <h3><i class="fas fa-envelope-open-text"></i> Shared with Me</h3>
-    <div id="sharedInboxContainer">
-        <p class="muted" style="text-align:center; padding:10px;">Checking for shared entries...</p>
-    </div>
-</div>
+          </div>
 
-    <div class="card" style="margin-top: 20px;">
-        <h3><i class="fas fa-bell"></i> Pending Requests</h3>
-        <div id="pendingRequests"></div> </div> </section>
-
-        <div class="card" style="margin-top: 20px; border-top: 4px solid #10b981;">
-        <h3><i class="fas fa-users"></i> My Friends</h3>
-        <div id="confirmedFriendsList">
+          <div class="card" style="margin-top: 20px; border-left: 4px solid var(--primary);">
+            <h3><i class="fas fa-envelope-open-text"></i> Shared with Me</h3>
+            <div id="sharedInboxContainer">
+              <p class="muted" style="text-align:center; padding:10px;">Checking for shared entries...</p>
             </div>
-    </div>
+          </div>
+
+          <div class="card" style="margin-top: 20px;">
+            <h3><i class="fas fa-bell"></i> Pending Requests</h3>
+            <div id="pendingRequests"></div>
+          </div>
+
+          <div class="card" style="margin-top: 20px; border-top: 4px solid #10b981;">
+            <h3><i class="fas fa-users"></i> My Friends</h3>
+            <div id="confirmedFriendsList"></div>
+          </div>
+        </section>
 
         <!-- SETTINGS -->
         <section id="view-settings" class="hidden">
@@ -830,9 +832,8 @@ html {
               <div class="label" style="margin-top: 12px;">Secret PIN</div>
               <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--border); border-radius:14px; background: color-mix(in oklab, var(--border) 8%, transparent); font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;">
                 <span id="pinText">••••••</span>
-                <i id="pinToggle" class="fas fa-eye" onclick="togglePinVisibility()"></i>
                 <button class="iconbtn" type="button" onclick="togglePinVisibility()" title="Show/Hide PIN">
-                  <i class="fas fa-eye" id="pinToggle"></i>
+                  <i class="fas fa-eye" id="pinToggleIcon"></i>
                 </button>
               </div>
 
@@ -1322,7 +1323,6 @@ let pinHidden = true;
 
 function togglePinVisibility(){
   const me = getUser();
-  console.log("Current User Data:", me); // Check F12 Console to see if 'pin' or 'password' exists here
   
   if(!me) {
     toast("danger", "Error", "Could not find user data.");
@@ -1331,15 +1331,32 @@ function togglePinVisibility(){
 
   pinHidden = !pinHidden;
 
-  // FIX: Look for 'pin' or 'password' inside the 'me' object
-  const actualPin = me.pin || me.password || me.pass || "N/A";
-
+  // Get the actual PIN from user data (stored as pinHash, cannot reverse)
+  // Instead of showing the PIN (which is hashed), we show a message
+  const pinDisplay = pinHidden ? "••••••" : "PIN is hashed for security";
+  
   // Update UI
-  $("pinText").innerText = pinHidden ? "••••••" : actualPin;
-  $("pinToggle").className = pinHidden ? "fas fa-eye" : "fas fa-eye-slash";
+  const pinTextEl = document.getElementById("pinText");
+  const pinIconEl = document.getElementById("pinToggleIcon");
+  
+  if (pinTextEl) {
+    pinTextEl.innerText = pinDisplay;
+  }
+  
+  if (pinIconEl) {
+    pinIconEl.className = pinHidden ? "fas fa-eye" : "fas fa-eye-slash";
+  }
 
   if(!pinHidden){
-    toast("warn", "Security Warning", "Your PIN is now visible.");
+    toast("info", "Security Info", "Your PIN is stored as a hash and cannot be displayed for security reasons.");
+    // Auto-hide after 3 seconds
+    setTimeout(() => {
+      if (!pinHidden) {
+        pinHidden = true;
+        if (pinTextEl) pinTextEl.innerText = "••••••";
+        if (pinIconEl) pinIconEl.className = "fas fa-eye";
+      }
+    }, 3000);
   }
 }
 
