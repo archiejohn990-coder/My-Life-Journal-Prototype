@@ -1,25 +1,14 @@
 {
   "name": "myjournal",
   "version": "1.0.0",
-  "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "cors": "^2.8.6",
-<<<<<<< HEAD
-    "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "mongoose": "^9.5.0"
-=======
-    "express": "^5.2.1",
-    "mongoose": "^8.0.0"
->>>>>>> 08ccca71e5a094631b8dc5e022fa5a1cd74c9d6f
+    "mongoose": "^8.0.0",
+    "dotenv": "^16.0.0"
   }
 }
