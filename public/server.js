@@ -4,6 +4,29 @@ const fs = require("fs");
 const path = require("path");
 const mongoose = require("mongoose");
 
+require("dotenv").config();
+
+mongoose.connect(process.env.MONGO_URL)
+  .then(() => console.log("MongoDB Connected"))
+  .catch(err => console.log(err));
+
+const userSchema = new mongoose.Schema({
+  username: String,
+  password: String
+});
+
+app.post("/signup", async (req, res) => {
+  try {
+    const user = new User(req.body);
+    await user.save();
+    res.json({ message: "User created successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+const User = mongoose.model("User", userSchema);
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
