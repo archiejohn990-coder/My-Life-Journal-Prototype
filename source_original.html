@@ -428,6 +428,39 @@ input, textarea, select {
 html {
   scroll-behavior: smooth;
 }
+.team {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+  justify-content: center;
+  text-align:center;
+  margin-top:12px;
+  display:flex; justify-content:space-between; align-items:center;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in oklab, var(--card) 90%, transparent);
+  width: 100%;
+  max-width: 720px;
+}
+
+.member img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #22c55e;
+  transition: 0.3s;
+}
+
+.member img:hover {
+  transform: scale(1.1);
+}
+
+.member p {
+  margin-top: 10px;
+}
   </style>
 </head>
 
@@ -550,7 +583,7 @@ html {
     <div class="layout">
       <nav class="sidebar" id="sidebar">
         <div class="sidebar-logo" onclick="showView('home')">
-          <i class="fas fa-feather"></i> <span>Journal</span>
+          <i class="fas fa-feather"></i> <span> My Life Journal</span>
         </div>
 
         <div class="nav">
@@ -579,6 +612,10 @@ html {
           <button class="btn-ghost" type="button" onclick="toggleTheme()" title="Toggle theme">
             <i class="fas fa-circle-half-stroke"></i> Theme
           </button>
+
+          <button class="btn-ghost" type="button" onclick="openAbout()" title="Toggle about">
+            <i class="fas fa-circle-info"></i> About
+            </button>
 
           <div class="pill" title="Current user">
             <img id="topAvatar" alt="avatar" src="https://ui-avatars.com/api/?background=10b981&color=fff&name=User">
@@ -897,17 +934,41 @@ html {
         <div class="card notice" style="margin:0;">
           <div style="font-weight:950; margin-bottom:6px;">What this is</div>
           <div class="muted" style="line-height:1.5;">
-            A single-file journal app that saves everything in your browser using LocalStorage.
-            Entries are encrypted using WebCrypto (AES‑GCM) with a key derived from your password.
+            A Journal that you can use through Internet, you don't need papers and pen
+            or even a book to write or put your thoughts about your life story.
+            Share with Friends or Family your thoughts, if you want. Be Open and Creative whenever you want to My Life Journal.
           </div>
         </div>
-        <div class="hint" style="text-align:left; margin-top:12px;">
-          ⚠️ This is still a browser demo — do not use it for truly sensitive information unless you trust your device.
-        </div>
-      </div>
-      <div class="modal-foot">
-        <button class="btn-inline" onclick="closeAbout()">Okay</button>
-      </div>
+        <br>
+        <div class="card notice" style="margin:0;">
+
+          <h3>Our Team</h3>
+
+  <div class="team">
+
+    <div class="member">
+      <img src="Carlo.jpg">
+      <p1>Carlo Nuyda</p1>
+    </div>
+
+    <div class="member">
+      <img src="Yurie.jpg">
+      <p1>Yurie Villacorte</p1>
+    </div>
+
+    <div class="member">
+      <img src="Archie.jpg">
+      <p1>Archie Jhon Gregorio</p1>
+    </div>
+
+    <div class="member">
+      <img src="Daisy.jpg">
+      <p1>Daisy Serapia</p1>
+    </div>
+
+    <div class="member">
+      <img src="Trishan.jpg">
+      <p1>Trishan Laurito</p1>
     </div>
   </div>
 
@@ -2119,6 +2180,7 @@ async function acceptReq(id){
   loadRequests();
   loadFriends();
 }
+
 </script>
 <script src="app.js"></script>
 </body>
