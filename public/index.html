@@ -285,7 +285,7 @@
       background: color-mix(in oklab, var(--border) 12%, transparent);
       font-size: 0.75rem;
     }
-    canvas{ width: 100%; height: 200px; border-radius: 16px; }
+    canvas{ width: 100%; height: 200px; border-radius: 16px; background: var(--card); }
 
     /* Settings Page Styles */
     .settings-tabs {
@@ -479,7 +479,7 @@
         <section id="view-diary" class="hidden"><h1>My Diary</h1><div class="card"><div class="row"><div class="field"><input type="text" id="diarySearch" class="input" placeholder="Search..."></div><div class="field"><input type="date" id="dateFilter" class="input"></div></div><div class="row"><div class="field"><select id="sortMode" class="input"><option value="newest">Newest first</option><option value="oldest">Oldest first</option></select></div><div class="field"><select id="moodFilter" class="input"><option value="">All moods</option><option>🙂 Happy</option><option>😌 Calm</option><option>😤 Stressed</option><option>😢 Sad</option><option>🤩 Excited</option><option>😐 Neutral</option></select></div></div><div class="button-row-center"><button class="btn-inline" id="newEntryBtn"><i class="fas fa-plus"></i> New Entry</button></div></div><div id="diaryContainer"></div></section>
 
         <!-- STATS VIEW -->
-        <section id="view-stats" class="hidden"><h1>Statistics</h1><div class="card"><div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; text-align:center;"><div><div class="big" id="kpiTotal" style="font-size:2rem; font-weight:bold;">0</div><div>Total Entries</div></div><div><div class="big" id="kpiStreak" style="font-size:2rem; font-weight:bold;">0</div><div>Day Streak</div></div><div><div class="big" id="kpiThisMonth" style="font-size:2rem; font-weight:bold;">0</div><div>This Month</div></div></div></div><div class="card"><canvas id="chart"></canvas></div></section>
+        <section id="view-stats" class="hidden"><h1>Statistics</h1><div class="card"><div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; text-align:center;"><div><div class="big" id="kpiTotal" style="font-size:2rem; font-weight:bold;">0</div><div>Total Entries</div></div><div><div class="big" id="kpiStreak" style="font-size:2rem; font-weight:bold;">0</div><div>Day Streak</div></div><div><div class="big" id="kpiThisMonth" style="font-size:2rem; font-weight:bold;">0</div><div>This Month</div></div></div></div><div class="card"><h3>Entries per month</h3><canvas id="chart"></canvas></div></section>
 
         <!-- FRIENDS VIEW -->
         <section id="view-friends" class="hidden"><h1>Friends</h1><div class="card"><h3>Add Friend</h3><input id="friendEmail" class="input" placeholder="friend@example.com"><div class="button-row-center"><button class="btn-inline" id="sendRequestBtn">Send Request</button></div></div><div class="card"><h3>Pending Requests</h3><div id="pendingRequests"></div></div><div class="card"><h3>Shared With Me</h3><div id="sharedInboxContainer"></div></div><div class="card"><h3>My Friends</h3><div id="confirmedFriendsList"></div></div></section>
@@ -844,16 +844,45 @@ async function renderDiary(){
   $("diaryContainer").innerHTML = filtered.map(p => `<div class='card'><div class='entry'><div><small>${p.date} • ${p.mood}</small>${p.title ? `<h4>${escapeHtml(p.title)}</h4>` : ""}<p>${escapeHtml(p.body)}</p>${p.image ? `<img class='thumb' src='${p.image}'>` : ""}<div class='chips'>${(p.tags||[]).map(t => `<span class='chip'>#${escapeHtml(t)}</span>`).join("")}</div></div><div class='entry-actions'><button class='iconbtn' onclick='shareToFriend("${p.id}")'><i class='fas fa-share'></i></button><button class='iconbtn' onclick='editEntry("${p.id}")'><i class='fas fa-edit'></i></button><button class='iconbtn' onclick='deleteEntry("${p.id}")'><i class='fas fa-trash'></i></button></div></div></div>`).join("");
 }
 
+// ==================== FIXED QUICK SAVE ====================
 async function quickSave(){
-  let title = $("quickTitle").value, mood = $("quickMood").value, tags = $("quickTags").value.split(",").map(t=>t.trim()).filter(Boolean), body = $("quickBody").value;
-  if(!body && !title) return toast("danger","Empty","Write something");
+  let title = document.getElementById("quickTitle").value;
+  let mood = document.getElementById("quickMood").value;
+  let tags = document.getElementById("quickTags").value.split(",").map(t=>t.trim()).filter(Boolean);
+  let body = document.getElementById("quickBody").value;
+  
+  console.log("Quick Save - Title:", title, "Body:", body);
+  
+  if(!body && !title) {
+    toast("danger","Empty","Write something");
+    return;
+  }
+  
   let vault = await openVault();
+  console.log("Current vault posts:", vault.posts?.length);
+  
   vault.posts = vault.posts || [];
-  vault.posts.push(normalizeEntry({ title, mood, tags, body, date: new Date().toISOString().slice(0,10), createdAt: new Date().toISOString(), image: null }));
+  vault.posts.push({
+    id: uuid(),
+    title: title,
+    body: body,
+    mood: mood,
+    tags: tags,
+    date: new Date().toISOString().slice(0,10),
+    createdAt: new Date().toISOString(),
+    image: null
+  });
+  
+  console.log("New posts count:", vault.posts.length);
   await saveVault(vault);
-  $("quickTitle").value = ""; $("quickTags").value = ""; $("quickBody").value = "";
+  
+  document.getElementById("quickTitle").value = "";
+  document.getElementById("quickTags").value = "";
+  document.getElementById("quickBody").value = "";
+  
   toast("","Saved","Entry added");
   await renderDiary();
+  await updateStats();
 }
 
 // ==================== Editor ====================
@@ -889,42 +918,126 @@ async function saveFromEditor(){
 async function editEntry(id){ let vault = await openVault(); let entry = vault.posts.find(p => p.id === id); if(entry) openEditor(entry); }
 async function deleteEntry(id){ if(!confirm("Delete this entry?")) return; let vault = await openVault(); vault.posts = vault.posts.filter(p => p.id !== id); await saveVault(vault); await renderDiary(); toast("","Deleted","Entry removed"); }
 
-// ==================== Stats ====================
+// ==================== FIXED STATS WITH WORKING CHART ====================
 async function updateStats(){
   const me = getUser(); if(!me) return;
   const vault = await openVault();
   const posts = (vault.posts || []).map(normalizeEntry);
+  
+  console.log("Stats - Total posts:", posts.length);
+  
   $("kpiTotal").innerText = String(posts.length);
+  
+  // Calculate streak
   const dates = new Set(posts.map(p => p.date));
-  let streak = 0; for(let d = new Date();;){ let iso = d.toISOString().slice(0,10); if(dates.has(iso)) streak++; else break; d.setDate(d.getDate()-1); }
+  let streak = 0; 
+  for(let d = new Date();;){ 
+    let iso = d.toISOString().slice(0,10); 
+    if(dates.has(iso)) streak++; 
+    else break; 
+    d.setDate(d.getDate()-1); 
+  }
   $("kpiStreak").innerText = String(streak);
-  const now = new Date(); const ym = now.toISOString().slice(0,7); const thisMonth = posts.filter(p => (p.date || "").slice(0,7) === ym).length;
+  
+  // This month entries
+  const now = new Date(); 
+  const ym = now.toISOString().slice(0,7); 
+  const thisMonth = posts.filter(p => (p.date || "").slice(0,7) === ym).length;
   $("kpiThisMonth").innerText = String(thisMonth);
+  
+  // Draw chart
   drawChart(posts);
 }
+
 function drawChart(posts){
-  const c = $("chart"); if(!c) return;
-  const ctx = c.getContext("2d"); if(!ctx) return;
-  const dpr = window.devicePixelRatio || 1;
-  const cssW = c.clientWidth || 600, cssH = c.clientHeight || 160;
-  c.width = Math.floor(cssW * dpr); c.height = Math.floor(cssH * dpr);
-  ctx.scale(dpr, dpr);
-  const now = new Date(); const counts = [];
-  for(let i=11;i>=0;i--){ const d = new Date(now.getFullYear(), now.getMonth()-i, 1); counts.push(posts.filter(p => (p.date || "").slice(0,7) === d.toISOString().slice(0,7)).length); }
-  const W = cssW, H = cssH;
-  ctx.clearRect(0,0,W,H);
-  const pad = 18, max = Math.max(1, ...counts), barW = (W - pad*2) / counts.length;
-  ctx.globalAlpha = 0.25;
-  ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue("--border") || "#ccc";
-  for(let i=0;i<=4;i++){ const y = pad + (H - pad*2) * (i/4); ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(W-pad, y); ctx.stroke(); }
-  ctx.globalAlpha = 1;
-  for(let i=0;i<counts.length;i++){
-    const v = counts[i], bh = (H - pad*2) * (v / max), x = pad + i*barW + 6, y = H - pad - bh, bw = Math.max(6, barW - 12);
-    const primary = getComputedStyle(document.documentElement).getPropertyValue("--primary").trim() || "#10b981";
-    ctx.fillStyle = hexToRgba(primary, 0.6); ctx.fillRect(x, y, bw, bh);
-    ctx.fillStyle = hexToRgba(primary, 0.95); ctx.fillRect(x, y+bh-3, bw, 3);
+  const canvas = document.getElementById("chart");
+  if(!canvas) {
+    console.log("Chart canvas not found");
+    return;
+  }
+  
+  const ctx = canvas.getContext("2d");
+  if(!ctx) return;
+  
+  // Set canvas size
+  const container = canvas.parentElement;
+  const width = container.clientWidth - 40;
+  const height = 200;
+  canvas.width = width;
+  canvas.height = height;
+  
+  // Clear canvas
+  ctx.clearRect(0, 0, width, height);
+  
+  if(!posts || posts.length === 0){
+    ctx.fillStyle = "#64748b";
+    ctx.font = "14px system-ui";
+    ctx.textAlign = "center";
+    ctx.fillText("No entries yet. Write your first journal entry!", width/2, height/2);
+    return;
+  }
+  
+  // Get last 6 months
+  const months = [];
+  const counts = [];
+  const now = new Date();
+  
+  for(let i = 5; i >= 0; i--){
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    months.push(monthNames[d.getMonth()] + " " + d.getFullYear());
+    
+    let count = 0;
+    for(let p of posts){
+      if(p.date && p.date.slice(0,7) === d.toISOString().slice(0,7)){
+        count++;
+      }
+    }
+    counts.push(count);
+  }
+  
+  console.log("Chart data:", months, counts);
+  
+  // Draw chart
+  const maxCount = Math.max(1, ...counts);
+  const barWidth = (width - 80) / counts.length - 10;
+  const startX = 50;
+  
+  for(let i = 0; i < counts.length; i++){
+    const barHeight = (counts[i] / maxCount) * (height - 60);
+    const x = startX + i * (barWidth + 10);
+    const y = height - barHeight - 30;
+    
+    // Draw bar
+    ctx.fillStyle = "#10b981";
+    ctx.fillRect(x, y, barWidth, barHeight);
+    
+    // Draw value on top of bar
+    if(counts[i] > 0){
+      ctx.fillStyle = "#64748b";
+      ctx.font = "12px system-ui";
+      ctx.textAlign = "center";
+      ctx.fillText(counts[i], x + barWidth/2, y - 5);
+    }
+    
+    // Draw month label
+    ctx.fillStyle = "#64748b";
+    ctx.font = "10px system-ui";
+    ctx.textAlign = "center";
+    ctx.fillText(months[i], x + barWidth/2, height - 10);
+  }
+  
+  // Draw y-axis labels
+  ctx.fillStyle = "#64748b";
+  ctx.font = "10px system-ui";
+  ctx.textAlign = "right";
+  for(let i = 0; i <= 4; i++){
+    const val = Math.round((maxCount / 4) * i);
+    const y = height - 30 - (i * (height - 60) / 4);
+    ctx.fillText(val, 40, y);
   }
 }
+
 function hexToRgba(hex,a){ const h = hex.replace("#","").trim(); const full = h.length===3 ? h.split("").map(c=>c+c).join("") : h.padEnd(6,"0").slice(0,6); const r = parseInt(full.slice(0,2),16); const g = parseInt(full.slice(2,4),16); const b = parseInt(full.slice(4,6),16); return `rgba(${r},${g},${b},${a})`; }
 async function refreshAll(){ await renderDiary(); await updateStats(); }
 
