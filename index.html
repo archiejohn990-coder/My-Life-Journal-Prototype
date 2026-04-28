@@ -575,11 +575,15 @@ html {
   <div class="toast-wrap" id="toastWrap" aria-live="polite" aria-atomic="true"></div>
 
   <!-- AUTH -->
-  <section id="authSection" class="auth">
-    <div style="position:absolute; top:16px; right:16px; display:flex; gap:10px;">
-      <button class="pillbtn" type="button" onclick="toggleTheme()"><i class="fas fa-moon"></i> Theme</button>
-      <button class="pillbtn" type="button" onclick="openAbout()"><i class="fas fa-circle-info"></i> About</button>
-    </div>
+ <section id="authSection" class="auth">
+  <div style="position:absolute; top:16px; right:16px; display:flex; gap:10px; z-index:100;">
+    <button class="pillbtn" type="button" onclick="window.toggleTheme()">
+      <i class="fas fa-moon"></i> Theme
+    </button>
+    <button class="pillbtn" type="button" onclick="window.openAbout()">
+      <i class="fas fa-circle-info"></i> About
+    </button>
+  </div>
 
     <div class="auth-card" role="dialog" aria-label="Authentication">
       <div class="brand">
@@ -1041,7 +1045,7 @@ html {
       </div>
       <div class="modal-body">
         <div class="card notice" style="margin:0;">
-          <div style="font-weight:950; margin-bottom:6px;">What this is</div>
+          <div style="font-weight:950; margin-bottom:6px;">What is this?</div>
           <div class="muted" style="line-height:1.5;">
             A Journal that you can use through Internet, you don't need papers and pen
             or even a book to write or put your thoughts about your life story.
