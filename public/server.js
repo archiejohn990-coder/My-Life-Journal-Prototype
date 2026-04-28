@@ -1,1210 +1,581 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Life Journal</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    :root{
-      --primary:#10b981;
-      --primary2:#0ea5e9;
-      --danger:#ef4444;
-      --warn:#f59e0b;
-      --bg:#f1f5f9;
-      --card:#ffffff;
-      --sidebar:#0f172a;
-      --text:#0f172a;
-      --muted:#64748b;
-      --border:#e2e8f0;
-      --ring: rgba(16,185,129,.35);
-      --shadow: 0 10px 25px rgba(2,6,23,.08);
-      --shadow2: 0 18px 45px rgba(2,6,23,.18);
-      --radius: 18px;
-    }
-    [data-theme="dark"]{
-      --bg:#0b1220;
-      --card:#0f172a;
-      --sidebar:#070b14;
-      --text:#e5e7eb;
-      --muted:#94a3b8;
-      --border: rgba(148,163,184,.22);
-      --shadow: 0 10px 25px rgba(0,0,0,.28);
-      --shadow2: 0 18px 45px rgba(0,0,0,.45);
-      --ring: rgba(61, 233, 27, 0.28);
-    }
-    *{ box-sizing:border-box; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin:0; padding:0;}
-    body{ background:var(--bg); color:var(--text); min-height:100vh; }
-    button,a,input,textarea,select{ transition:.18s ease; }
-    a{ color: inherit; }
-    .hidden{ display:none !important; }
-    .toast-wrap{ position:fixed; right:16px; bottom:16px; display:flex; flex-direction:column; gap:10px; z-index:99999; pointer-events:none;}
-    .toast{
-      pointer-events:auto;
-      min-width:280px; max-width:360px;
-      background: color-mix(in oklab, var(--card) 92%, transparent);
-      border: 1px solid var(--border);
-      border-left: 6px solid var(--primary);
-      border-radius: 16px;
-      box-shadow: var(--shadow2);
-      padding: 12px;
-      display:flex; gap:10px; align-items:flex-start;
-      animation: pop .18s ease;
-      backdrop-filter: blur(10px);
-    }
-    .toast i{ margin-top:2px; color: var(--primary); }
-    .toast .t-title{ font-weight:900; margin-bottom:2px; }
-    .toast .t-msg{ color: var(--muted); font-size:.9rem; line-height:1.25; }
-    .toast .x{ margin-left:auto; border:none; background:transparent; cursor:pointer; color: var(--muted); padding:4px 6px; border-radius:10px; }
-    .toast.danger{ border-left-color: var(--danger); }
-    .toast.danger i{ color: var(--danger); }
-    .toast.warn{ border-left-color: var(--warn); }
-    .toast.warn i{ color: var(--warn); }
-    @keyframes pop{ from{ transform:translateY(6px); opacity:.2;} to{ transform:translateY(0); opacity:1;} }
-    .auth{
-      display:flex; justify-content:center; align-items:center;
-      min-height:100vh;
-      background: radial-gradient(1200px 700px at 30% 20%, rgba(16,185,129,.25), transparent 55%),
-                  radial-gradient(1000px 700px at 70% 30%, rgba(14,165,233,.18), transparent 55%),
-                  var(--sidebar);
-      padding:24px;
-    }
-    .auth-card{
-      width:100%; max-width: 440px;
-      background: color-mix(in oklab, #ffffff 92%, transparent);
-      border-radius: 26px;
-      box-shadow: var(--shadow2);
-      padding: 24px 22px;
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,.18);
-    }
-    [data-theme="dark"] .auth-card{
-      background: color-mix(in oklab, var(--card) 88%, transparent);
-      border: 1px solid rgba(148,163,184,.14);
-    }
-    .brand{ display:flex; align-items:center; gap:10px; justify-content:center; margin-bottom:10px; }
-    .brand i{ color: var(--primary); font-size: 2rem; }
-    .brand h1{ font-size: 1.55rem; }
-    .pillbtn{
-      border:none; cursor:pointer; border-radius:999px; padding:10px 12px;
-      background: rgba(255,255,255,.14); color: rgba(255,255,255,.9);
-      font-weight:800;
-    }
-    .tab-switch{ display:flex; background: #eef2f7; padding:6px; border-radius:14px; margin: 14px 0 10px; gap:6px; }
-    [data-theme="dark"] .tab-switch{ background: rgba(148,163,184,.14); }
-    .tab-switch button{ flex:1; border:none; background:transparent; padding:12px; border-radius:12px; cursor:pointer; font-weight:900; color: var(--muted); }
-    .tab-switch button.active{ background: var(--card); color: var(--primary); box-shadow: 0 2px 10px rgba(2,6,23,.10); }
-    .field{ margin-top:10px; text-align:left; }
-    .label{ font-size: .82rem; color: var(--muted); margin: 0 0 6px 2px; font-weight:600; }
-    .input{
-      width:100%; padding: 12px 14px;
-      border-radius:14px;
-      border: 1px solid var(--border);
-      outline:none;
-      background: var(--card);
-      color: var(--text);
-      font-size: 1rem;
-    }
-    .input:focus{ border-color: var(--primary); box-shadow: 0 0 0 3px var(--ring); }
-    .btn{
-      width:100%;
-      margin-top:12px;
-      padding:14px;
-      border:none; border-radius:14px;
-      font-weight:900; cursor:pointer; color:white;
-      background: linear-gradient(135deg, var(--primary), #22c55e);
-      box-shadow: 0 4px 12px rgba(16,185,129,.25);
-    }
-    .btn:hover{ transform: translateY(-1px); filter: brightness(1.02); }
-    .captcha{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      background: color-mix(in oklab, var(--card) 90%, transparent);
-      border:1px solid var(--border);
-      border-radius:14px; padding: 12px; margin-top:10px;
-    }
-    .captcha-code{ font-weight: 950; letter-spacing: 5px; font-family: monospace; font-size: 1.2rem; }
-    .captcha button{
-      border:none; cursor:pointer; font-weight: 900;
-      background: color-mix(in oklab, var(--primary) 16%, transparent);
-      color: var(--primary);
-      padding: 8px 16px; border-radius: 12px;
-    }
-    .link{ color: var(--primary); font-weight: 900; cursor:pointer; text-decoration: underline; }
-    #app{ display:none; height:100vh; overflow:hidden;}
-    .layout{ display:flex; height:100vh; }
-    .sidebar{
-      width: 278px;
-      background: var(--sidebar);
-      color: white;
-      padding: 20px;
-      display:flex; flex-direction:column; gap:10px;
-    }
-    .sidebar-logo{
-      display:flex; align-items:center; gap:10px;
-      color: var(--primary);
-      font-weight: 950;
-      font-size: 1.1rem;
-      padding: 10px;
-      border-radius: 14px;
-      cursor:pointer;
-    }
-    .sidebar-logo:hover{ background: rgba(255,255,255,.06); }
-    .nav a{
-      display:flex; align-items:center; gap:12px;
-      padding: 12px;
-      border-radius: 14px;
-      color: #94a3b8;
-      text-decoration:none;
-      cursor:pointer;
-      font-weight: 750;
-    }
-    .nav a:hover{ background: rgba(255,255,255,.06); color: #e2e8f0; }
-    .nav a.active{ background: rgba(255,255,255,.10); color:white; }
-    .spacer{ flex:1; }
-    .logout{ color: #fecaca !important; }
-    .main{ flex:1; padding: 26px; overflow-y:auto; }
-    .topbar{ display:flex; align-items:center; gap:12px; margin-bottom: 16px; flex-wrap:wrap; }
-    .hamburger{ display:none; border:none; cursor:pointer; background: var(--card); border: 1px solid var(--border); padding: 10px 12px; border-radius: 14px; color: var(--text); }
-    .pill{
-      display:flex; align-items:center; gap:10px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 8px 12px;
-    }
-    .pill img{ width: 34px; height: 34px; border-radius: 50%; object-fit: cover; }
-    .pill .name{ font-weight: 950; }
-    .card{
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px;
-      box-shadow: var(--shadow);
-      margin-bottom: 12px;
-    }
-    .card h3{ margin-bottom: 12px; }
-    .grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .btn-inline{
-      padding: 10px 20px;
-      border-radius: 14px; border:none; cursor:pointer;
-      font-weight: 950; color: white;
-      background: linear-gradient(135deg, var(--primary), #22c55e);
-    }
-    .btn-ghost{
-      padding: 10px 20px;
-      border-radius: 14px; border: 1px solid var(--border);
-      cursor:pointer; font-weight: 950;
-      background: var(--card); color: var(--text);
-    }
-    .row{ display:flex; gap:12px; }
-    .row .field{ flex:1; }
-    .entry{ display:flex; justify-content:space-between; gap:14px; align-items:flex-start; }
-    .entry small{ color: var(--muted); display:block; margin-bottom: 6px; font-size:0.8rem; }
-    .entry p{ line-height: 1.55; white-space: pre-wrap; word-break: break-word; }
-    .entry h4{ font-size: 1.05rem; margin-bottom: 6px; }
-    .chips{ display:flex; gap:8px; flex-wrap:wrap; margin-top: 10px;}
-    .chip{
-      display:inline-flex; align-items:center; gap:6px;
-      background: color-mix(in oklab, var(--border) 18%, transparent);
-      border: 1px solid color-mix(in oklab, var(--border) 30%, transparent);
-      color: var(--muted);
-      font-size: .78rem;
-      padding: 4px 10px;
-      border-radius: 999px;
-    }
-    .entry-actions{ display:flex; gap:8px; }
-    .iconbtn{
-      border:none; cursor:pointer;
-      background: color-mix(in oklab, var(--border) 16%, transparent);
-      padding: 8px 12px;
-      border-radius: 12px;
-      color: var(--text);
-    }
-    .iconbtn:hover{ transform: translateY(-1px); background: color-mix(in oklab, var(--border) 30%, transparent); }
-    .thumb{ width: 96px; height: 72px; border-radius: 14px; object-fit: cover; margin-top: 8px; }
-    .modal-backdrop{
-      position: fixed; inset:0;
-      background: rgba(2,6,23,.75);
-      display:none;
-      align-items:center; justify-content:center;
-      padding: 18px;
-      z-index: 9999;
-    }
-    .modal{
-      width: 100%;
-      max-width: 800px;
-      max-height: 90vh;
-      overflow-y: auto;
-      background: var(--card);
-      border-radius: 22px;
-      box-shadow: var(--shadow2);
-    }
-    .modal-head{
-      display:flex; justify-content:space-between; align-items:center;
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
-    }
-    .modal-body{ padding: 20px; }
-    .modal-foot{ padding: 16px 20px; display:flex; gap:10px; justify-content:flex-end; border-top: 1px solid var(--border); }
-    .preview{
-      border: 1px dashed var(--border);
-      padding: 12px;
-      border-radius: 16px;
-      background: color-mix(in oklab, var(--border) 10%, transparent);
-      min-height: 150px;
-    }
-    .button-row-center{ display:flex; justify-content:center; gap:12px; margin-top:12px; }
-    @media (max-width: 768px){
-      .sidebar{
-        position: fixed; top:0; left:0;
-        height: 100vh; transform: translateX(-105%);
-        z-index: 1000; width: 280px;
-      }
-      .sidebar.open{ transform: translateX(0); }
-      .drawer-backdrop{ display:none; position:fixed; inset:0; background: rgba(0,0,0,.5); z-index: 999; }
-      .drawer-backdrop.show{ display:block; }
-      .hamburger{ display:inline-flex; align-items:center; gap:8px; }
-      .grid{ grid-template-columns: 1fr; }
-      .row{ flex-direction: column; }
-    }
-    textarea.input{ min-height: 100px; resize: vertical; }
-    .kbd{
-      font-family: monospace;
-      padding: 2px 6px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-      background: color-mix(in oklab, var(--border) 12%, transparent);
-      font-size: 0.75rem;
-    }
-    canvas{ width: 100%; height: 200px; border-radius: 16px; }
+const express = require("express");
+const cors = require("cors");
+const path = require("path");
+const mongoose = require("mongoose");
+require("dotenv").config();
 
-    /* Settings Page Styles */
-    .settings-tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 24px;
-      background: var(--card);
-      padding: 8px;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      flex-wrap: wrap;
-    }
-    .settings-tab {
-      flex: 1;
-      padding: 12px 20px;
-      border: none;
-      background: transparent;
-      color: var(--muted);
-      font-weight: 600;
-      cursor: pointer;
-      border-radius: 12px;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    .settings-tab i { font-size: 1.1rem; }
-    .settings-tab:hover { background: color-mix(in oklab, var(--primary) 10%, transparent); color: var(--primary); }
-    .settings-tab.active { background: var(--primary); color: white; }
-    .settings-panel { animation: fadeIn 0.3s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(cors());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+
+// MongoDB Connection
+const MONGO_URL = process.env.MONGO_URL || "mongodb+srv://Archie:Archie1225@cluster0.7e4s845.mongodb.net/myjournal?retryWrites=true&w=majority";
+
+mongoose.connect(MONGO_URL)
+  .then(() => console.log("✅ Connected to MongoDB Atlas!"))
+  .catch(err => console.error("❌ MongoDB Connection Error:", err));
+
+/* =========================
+   SCHEMAS
+========================= */
+
+// User Schema
+const userSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true, lowercase: true, index: true },
+  name: { type: String, required: true },
+  passwordHash: { type: String, required: true },
+  pinHash: { type: String, required: true },
+  kdfSalt: { type: String, required: true },
+  pinSalt: { type: String, required: true },
+  photo: { type: String, default: null },
+  encryptedVault: {
+    iv: { type: String, default: "" },
+    data: { type: String, default: "" }
+  },
+  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  friendRequests: [{
+    from: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    fromEmail: { type: String },
+    status: { type: String, enum: ['pending', 'accepted', 'rejected'], default: 'pending' },
+    createdAt: { type: Date, default: Date.now }
+  }],
+  failedAttempts: { type: Number, default: 0 },
+  lockedUntil: { type: Date, default: null },
+  lastSync: { type: Date, default: Date.now },
+  createdAt: { type: Date, default: Date.now }
+});
+
+// Shared Entry Schema
+const sharedEntrySchema = new mongoose.Schema({
+  from: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  to: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  fromEmail: { type: String, required: true, index: true },
+  toEmail: { type: String, required: true, index: true },
+  title: { type: String, default: "" },
+  body: { type: String, default: "" },
+  mood: { type: String, default: "" },
+  date: { type: String, default: "" },
+  image: { type: String, default: null },
+  tags: [{ type: String }],
+  sharedAt: { type: Date, default: Date.now, index: true },
+  read: { type: Boolean, default: false }
+});
+
+const User = mongoose.model("User", userSchema);
+const SharedEntry = mongoose.model("SharedEntry", sharedEntrySchema);
+
+/* =========================
+   HELPER FUNCTIONS
+========================= */
+
+function bytesToB64(bytes) {
+  let bin = "";
+  bytes.forEach(b => bin += String.fromCharCode(b));
+  return btoa(bin);
+}
+
+async function sha256(str) {
+  const enc = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest("SHA-256", enc);
+  return bytesToB64(new Uint8Array(hash));
+}
+
+function cleanUser(user) {
+  return {
+    id: user._id,
+    email: user.email,
+    name: user.name,
+    photo: user.photo,
+    kdfSalt: user.kdfSalt,
+    encryptedVault: user.encryptedVault,
+    lastSync: user.lastSync
+  };
+}
+
+/* =========================
+   AUTH ROUTES
+========================= */
+
+// Signup
+app.post("/api/signup", async (req, res) => {
+  try {
+    console.log("📥 SIGNUP REQUEST RECEIVED");
     
-    .profile-avatar { text-align: center; margin-bottom: 24px; }
-    .profile-avatar img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary); margin-bottom: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-    .info-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--border); }
-    .info-row:last-child { border-bottom: none; }
-    .info-label { font-weight: 600; color: var(--muted); display: flex; align-items: center; gap: 8px; }
-    .info-value { color: var(--text); font-weight: 500; }
-    .pin-display { display: flex; align-items: center; gap: 12px; }
-    .iconbtn-small { background: color-mix(in oklab, var(--border) 16%, transparent); border: 1px solid var(--border); padding: 6px 10px; border-radius: 10px; cursor: pointer; color: var(--text); }
-    .badge-encrypt { display: inline-block; padding: 4px 10px; background: color-mix(in oklab, var(--primary) 15%, transparent); border: 1px solid color-mix(in oklab, var(--primary) 30%, transparent); border-radius: 20px; font-size: 0.75rem; color: var(--primary); margin-right: 8px; }
-    .security-note { background: color-mix(in oklab, var(--warn) 10%, transparent); border-left: 4px solid var(--warn); padding: 14px; border-radius: 12px; margin-top: 16px; font-size: 0.85rem; color: var(--muted); }
-    .security-note i { color: var(--warn); margin-right: 8px; }
-    .data-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
-    .stat-item { text-align: center; padding: 16px; background: color-mix(in oklab, var(--border) 8%, transparent); border-radius: 16px; }
-    .stat-number { font-size: 1.8rem; font-weight: bold; color: var(--primary); }
-    .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
-    .button-group { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
-    .danger-zone { background: color-mix(in oklab, var(--danger) 8%, transparent); border: 1px solid color-mix(in oklab, var(--danger) 30%, transparent); border-radius: 16px; padding: 20px; margin-top: 24px; }
-    .danger-zone h4 { color: var(--danger); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-    .danger-zone p { font-size: 0.85rem; color: var(--muted); margin-bottom: 16px; }
-    .btn-danger { background: linear-gradient(135deg, var(--danger), #dc2626); color: white; border: none; padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; }
-    .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
-    .team-member { text-align: center; padding: 20px; background: color-mix(in oklab, var(--border) 6%, transparent); border-radius: 20px; transition: transform 0.2s; }
-    .team-member:hover { transform: translateY(-5px); }
-    .team-member img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); margin-bottom: 12px; }
-    .team-member h4 { margin: 8px 0 4px; color: var(--text); }
-    .social-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--primary); text-decoration: none; }
-    .team-description { text-align: center; color: var(--muted); margin-bottom: 20px; }
-    .member { text-align: center; }
-    .member img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); transition: transform 0.2s; }
-    .member img:hover { transform: scale(1.05); }
-    .member p { margin-top: 10px; font-weight: 500; }
+    const { email, name, passwordHash, pinHash, kdfSalt, pinSalt, photo, encryptedVault } = req.body;
     
-    /* Recovery Modal Styles */
-    .recovery-warning { background: color-mix(in oklab, var(--warn) 15%, transparent); border-left: 4px solid var(--warn); padding: 14px; border-radius: 12px; margin-bottom: 20px; display: flex; gap: 12px; font-size: 0.85rem; }
-    .recovery-warning i { color: var(--warn); font-size: 1.2rem; }
-    .divider { text-align: center; margin: 15px 0; position: relative; color: var(--muted); font-size: 0.8rem; }
-    .divider::before, .divider::after { content: ""; position: absolute; top: 50%; width: 45%; height: 1px; background: var(--border); }
-    .divider::before { left: 0; }
-    .divider::after { right: 0; }
-  </style>
-</head>
-<body>
-  <div class="toast-wrap" id="toastWrap"></div>
-
-  <!-- AUTH SECTION -->
-  <section id="authSection" class="auth">
-    <div style="position:absolute; top:16px; right:16px; display:flex; gap:10px;">
-      <button class="pillbtn" id="themeBtn"><i class="fas fa-moon"></i> Theme</button>
-      <button class="pillbtn" id="aboutBtn"><i class="fas fa-info-circle"></i> About</button>
-    </div>
-    <div class="auth-card">
-      <div class="brand">
-        <i class="fas fa-feather"></i>
-        <h1>My Life Journal</h1>
-      </div>
-      <div class="tab-switch">
-        <button id="tabLogin" class="active">Login</button>
-        <button id="tabSignup">Sign Up</button>
-      </div>
-      <div id="loginFormContainer">
-        <form id="authForm">
-          <div class="field hidden" id="fieldName">
-            <div class="label">Full Name</div>
-            <input type="text" id="regName" class="input" placeholder="Your full name">
-          </div>
-          <div class="field">
-            <div class="label">Email</div>
-            <input type="email" id="email" class="input" placeholder="you@example.com" required>
-          </div>
-          <div class="field">
-            <div class="label">Password (min 8 chars)</div>
-            <input type="password" id="pass" class="input" placeholder="········" required>
-          </div>
-          <div class="field">
-            <div class="label">6-Digit PIN</div>
-            <input type="password" id="pin" class="input" placeholder="123456" maxlength="6" required>
-          </div>
-          <div class="captcha">
-            <div>
-              <div class="label">Captcha</div>
-              <div class="captcha-code" id="captchaBox">----</div>
-            </div>
-            <button type="button" id="refreshCaptchaBtn"><i class="fas fa-rotate"></i> Refresh</button>
-          </div>
-          <div class="field">
-            <div class="label">Enter Captcha</div>
-            <input type="text" id="captchaInp" class="input" placeholder="Type the code">
-          </div>
-          <button type="submit" class="btn" id="submitBtn">Login</button>
-        </form>
-      </div>
-      
-      <!-- Forgot Password Link -->
-      <div class="hint" style="margin-top: 12px;">
-        <span class="link" id="forgotPasswordBtn">
-          <i class="fas fa-key"></i> Forgot password or PIN?
-        </span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Recovery Modal -->
-  <div class="modal-backdrop" id="recoveryModal">
-    <div class="modal" style="max-width: 500px;">
-      <div class="modal-head">
-        <h3><i class="fas fa-shield-alt"></i> Account Recovery</h3>
-        <button class="iconbtn" id="closeRecoveryModalBtn">✕</button>
-      </div>
-      <div class="modal-body">
-        <div class="recovery-warning">
-          <i class="fas fa-exclamation-triangle"></i>
-          <div>
-            <strong>Important Note:</strong><br>
-            Because entries are encrypted using your password, resetting your password will make all old entries inaccessible.
-            You will keep your account, but previous encrypted entries cannot be recovered.
-          </div>
-        </div>
-        <div class="field">
-          <div class="label">Email Address</div>
-          <input type="email" id="recoverEmail" class="input" placeholder="you@example.com">
-        </div>
-        <div class="field">
-          <div class="label">Full Name (exact match)</div>
-          <input type="text" id="recoverName" class="input" placeholder="Enter your full name as shown on account">
-        </div>
-        <div class="divider">OR</div>
-        <div class="field">
-          <div class="label">New Password (optional)</div>
-          <input type="password" id="newPassword" class="input" placeholder="Leave blank to keep current">
-        </div>
-        <div class="field">
-          <div class="label">New PIN (6 digits)</div>
-          <input type="password" id="newPinRecovery" class="input" placeholder="6-digit PIN" maxlength="6">
-        </div>
-        <div class="captcha" style="margin-top: 15px;">
-          <div>
-            <div class="label">Captcha</div>
-            <div class="captcha-code" id="recoveryCaptchaBox">----</div>
-          </div>
-          <button type="button" id="refreshRecoveryCaptchaBtn"><i class="fas fa-rotate"></i> Refresh</button>
-        </div>
-        <div class="field">
-          <div class="label">Enter Captcha</div>
-          <input type="text" id="recoveryCaptchaInp" class="input" placeholder="Type the code">
-        </div>
-        <button class="btn" id="resetAccountBtn">Reset Account</button>
-        <div class="hint" style="margin-top: 12px;">
-          <span class="link" id="backToLoginBtn">← Back to Login</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- APP SECTION -->
-  <section id="app">
-    <div class="drawer-backdrop" id="drawerBackdrop"></div>
-    <div class="layout">
-      <nav class="sidebar" id="sidebar">
-        <div class="sidebar-logo" id="sidebarLogo">
-          <i class="fas fa-feather"></i> <span>My Life Journal</span>
-        </div>
-        <div class="nav">
-          <a id="nav-home" class="active"><i class="fas fa-home"></i> Home</a>
-          <a id="nav-diary"><i class="fas fa-book"></i> Diary</a>
-          <a id="nav-stats"><i class="fas fa-chart-line"></i> Stats</a>
-          <a id="nav-friends"><i class="fas fa-users"></i> Friends</a>
-          <a id="nav-settings"><i class="fas fa-user-cog"></i> Settings</a>
-        </div>
-        <div class="spacer"></div>
-        <a id="logoutBtn" class="nav logout"><i class="fas fa-power-off"></i> Logout</a>
-      </nav>
-      <main class="main">
-        <div class="topbar">
-          <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i> Menu</button>
-          <div style="flex:1;"></div>
-          <button class="btn-ghost" id="themeToggleBtn"><i class="fas fa-circle-half-stroke"></i> Theme</button>
-          <button class="btn-ghost" id="openAboutBtn"><i class="fas fa-circle-info"></i> About</button>
-          <div class="pill">
-            <img id="topAvatar" alt="avatar" src="https://ui-avatars.com/api/?background=10b981&color=fff&name=User">
-            <div><div class="name" id="userGreet">User</div><div class="sub" id="userEmailSmall" style="font-size:0.75rem;"></div></div>
-          </div>
-        </div>
-
-        <!-- HOME VIEW -->
-        <section id="view-home"><h1>Welcome back 👋</h1><div class="grid" style="margin-top:14px;"><div class="card"><h3 id="entryCount">0 entries</h3><p class="muted">Your encrypted journal</p><div class="chips" style="margin-top:12px;"><span class="chip"><i class="fas fa-key"></i> AES-GCM</span><span class="chip"><i class="fas fa-bolt"></i> Ctrl+K to add</span></div></div><div class="card"><h3>Backup</h3><div class="button-row-center"><button class="btn-inline" id="exportBtn"><i class="fas fa-download"></i> Export</button><button class="btn-ghost" id="importBtn"><i class="fas fa-upload"></i> Import</button><input id="importFile" type="file" accept=".json" class="hidden"></div></div></div><div class="card"><h3>Quick Add</h3><div class="field"><input id="quickTitle" class="input" placeholder="Title"></div><div class="row"><div class="field"><select id="quickMood" class="input"><option>🙂 Happy</option><option>😌 Calm</option><option>😤 Stressed</option><option>😢 Sad</option><option>🤩 Excited</option><option>😐 Neutral</option></select></div><div class="field"><input id="quickTags" class="input" placeholder="Tags (comma)"></div></div><div class="field"><textarea id="quickBody" class="input" placeholder="What's on your mind?" rows="3"></textarea></div><div class="button-row-center"><button class="btn-inline" id="quickSaveBtn">Save Entry</button></div></div></section>
-
-        <!-- DIARY VIEW -->
-        <section id="view-diary" class="hidden"><h1>My Diary</h1><div class="card"><div class="row"><div class="field"><input type="text" id="diarySearch" class="input" placeholder="Search..."></div><div class="field"><input type="date" id="dateFilter" class="input"></div></div><div class="row"><div class="field"><select id="sortMode" class="input"><option value="newest">Newest first</option><option value="oldest">Oldest first</option></select></div><div class="field"><select id="moodFilter" class="input"><option value="">All moods</option><option>🙂 Happy</option><option>😌 Calm</option><option>😤 Stressed</option><option>😢 Sad</option><option>🤩 Excited</option><option>😐 Neutral</option></select></div></div><div class="button-row-center"><button class="btn-inline" id="newEntryBtn"><i class="fas fa-plus"></i> New Entry</button></div></div><div id="diaryContainer"></div></section>
-
-        <!-- STATS VIEW -->
-        <section id="view-stats" class="hidden"><h1>Statistics</h1><div class="card"><div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; text-align:center;"><div><div class="big" id="kpiTotal" style="font-size:2rem; font-weight:bold;">0</div><div>Total Entries</div></div><div><div class="big" id="kpiStreak" style="font-size:2rem; font-weight:bold;">0</div><div>Day Streak</div></div><div><div class="big" id="kpiThisMonth" style="font-size:2rem; font-weight:bold;">0</div><div>This Month</div></div></div></div><div class="card"><canvas id="chart"></canvas></div></section>
-
-        <!-- FRIENDS VIEW -->
-        <section id="view-friends" class="hidden"><h1>Friends</h1><div class="card"><h3>Add Friend</h3><input id="friendEmail" class="input" placeholder="friend@example.com"><div class="button-row-center"><button class="btn-inline" id="sendRequestBtn">Send Request</button></div></div><div class="card"><h3>Pending Requests</h3><div id="pendingRequests"></div></div><div class="card"><h3>Shared With Me</h3><div id="sharedInboxContainer"></div></div><div class="card"><h3>My Friends</h3><div id="confirmedFriendsList"></div></div></section>
-
-        <!-- SETTINGS - IMPROVED WITH TABS -->
-        <section id="view-settings" class="hidden">
-          <h1>Settings</h1>
-          <div class="settings-tabs">
-            <button class="settings-tab active" data-tab="profile"><i class="fas fa-user-circle"></i> Profile</button>
-            <button class="settings-tab" data-tab="security"><i class="fas fa-shield-alt"></i> Security</button>
-            <button class="settings-tab" data-tab="data"><i class="fas fa-database"></i> Data</button>
-            <button class="settings-tab" data-tab="team"><i class="fas fa-users"></i> Team</button>
-          </div>
-
-          <!-- Profile Tab -->
-          <div class="settings-panel active" id="settings-profile">
-            <div class="card" style="text-align:center;">
-              <div class="profile-avatar">
-                <img id="userAvatar" alt="profile photo">
-                <div><button class="btn-ghost" id="changePhotoBtn"><i class="fas fa-camera"></i> Change Photo</button></div>
-                <input id="photoInput" type="file" accept="image/*" class="hidden">
-              </div>
-              <div class="profile-info">
-                <div class="info-row"><div class="info-label"><i class="fas fa-user"></i> Full Name</div><div class="info-value" id="profName">Loading...</div></div>
-                <div class="info-row"><div class="info-label"><i class="fas fa-envelope"></i> Email Address</div><div class="info-value" id="profEmail">Loading...</div></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Security Tab -->
-          <div class="settings-panel hidden" id="settings-security">
-            <div class="card"><h3><i class="fas fa-lock"></i> Security Settings</h3>
-              <div class="info-row"><div class="info-label"><i class="fas fa-key"></i> Secret PIN</div><div class="info-value pin-display"><span id="pinText">••••••</span><button class="iconbtn-small" id="togglePinBtn"><i class="fas fa-eye" id="pinToggleIcon"></i></button></div></div>
-              <div class="info-row"><div class="info-label"><i class="fas fa-shield-alt"></i> Encryption</div><div class="info-value"><span class="badge-encrypt">AES-256-GCM</span><span class="badge-encrypt">Client-Side Encrypted</span></div></div>
-              <div class="security-note"><i class="fas fa-info-circle"></i> Your entries are encrypted with a key derived from your password. If you forget your password, encrypted entries cannot be recovered.</div>
-            </div>
-          </div>
-
-          <!-- Data Tab -->
-          <div class="settings-panel hidden" id="settings-data">
-            <div class="card"><h3><i class="fas fa-database"></i> Data Management</h3>
-              <div class="data-stats"><div class="stat-item"><div class="stat-number" id="dataEntryCount">0</div><div class="stat-label">Journal Entries</div></div><div class="stat-item"><div class="stat-number" id="dataFriendCount">0</div><div class="stat-label">Friends</div></div><div class="stat-item"><div class="stat-number" id="dataStorageSize">0 KB</div><div class="stat-label">Storage Used</div></div></div>
-              <div class="button-group"><button class="btn-inline" id="exportDataBtn"><i class="fas fa-download"></i> Export All Data</button><button class="btn-ghost" id="importDataBtn"><i class="fas fa-upload"></i> Import Backup</button></div>
-              <div class="danger-zone"><h4><i class="fas fa-exclamation-triangle"></i> Danger Zone</h4><p>Once you delete your account, there is no going back. This action cannot be undone.</p><button class="btn-danger" id="deleteAccountBtn"><i class="fas fa-trash-alt"></i> Delete Account & All Data</button></div>
-            </div>
-          </div>
-
-          <!-- Team Tab -->
-          <div class="settings-panel hidden" id="settings-team">
-            <div class="card"><h3><i class="fas fa-heart"></i> Meet the Team</h3><p class="team-description">The amazing people behind My Life Journal</p>
-              <div class="team-grid">
-                <div class="team-member"><img src="/Team/Carlo.jpg" onerror="this.src='https://ui-avatars.com/api/?background=10b981&color=fff&name=Carlo&size=100'"><h4>Carlo Nuyda</h4><a href="https://www.facebook.com/carlonuyda7" target="_blank" class="social-link"><i class="fab fa-facebook"></i> Facebook</a></div>
-                <div class="team-member"><img src="/Team/Yurie.jpg" onerror="this.src='https://ui-avatars.com/api/?background=0ea5e9&color=fff&name=Yurie&size=100'"><h4>Yurie Villacorte</h4><a href="https://www.facebook.com/yurievillacorte" target="_blank" class="social-link"><i class="fab fa-facebook"></i> Facebook</a></div>
-                <div class="team-member"><img src="/Team/Archie.jpg" onerror="this.src='https://ui-avatars.com/api/?background=10b981&color=fff&name=Archie&size=100'"><h4>Archie Jhon Gregorio</h4><a href="https://www.facebook.com/archie.jhon.gregorio" target="_blank" class="social-link"><i class="fab fa-facebook"></i> Facebook</a></div>
-                <div class="team-member"><img src="/Team/Daisy.jpg" onerror="this.src='https://ui-avatars.com/api/?background=f59e0b&color=fff&name=Daisy&size=100'"><h4>Daisy Serapia</h4><a href="https://www.facebook.com/kyle.serapia.507" target="_blank" class="social-link"><i class="fab fa-facebook"></i> Facebook</a></div>
-                <div class="team-member"><img src="/Team/Trishan.jpg" onerror="this.src='https://ui-avatars.com/api/?background=ef4444&color=fff&name=Trishan&size=100'"><h4>Trishan Laurito</h4><a href="https://www.facebook.com/trishan.laurito.2025" target="_blank" class="social-link"><i class="fab fa-facebook"></i> Facebook</a></div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-    </div>
-  </section>
-
-  <!-- EDITOR MODAL -->
-  <div class="modal-backdrop" id="editorBackdrop"><div class="modal"><div class="modal-head"><h3 id="editorTitle">Entry</h3><button class="iconbtn" id="closeEditorBtn">✕</button></div><div class="modal-body"><input id="eTitle" class="input" placeholder="Title"><div class="row" style="margin-top:10px;"><select id="eMood" class="input"><option>🙂 Happy</option><option>😌 Calm</option><option>😤 Stressed</option><option>😢 Sad</option><option>🤩 Excited</option><option>😐 Neutral</option></select><input id="eTags" class="input" placeholder="Tags (comma)"></div><div class="field"><input type="date" id="eDate" class="input"></div><div class="field"><textarea id="eBody" class="input" rows="6" placeholder="Write your entry..."></textarea></div><div class="field"><input type="file" id="eImage" accept="image/*"><img id="imagePreview" class="thumb hidden"></div><div class="preview" id="preview">Preview will appear here...</div></div><div class="modal-foot"><button class="btn-ghost" id="cancelEditorBtn">Cancel</button><button class="btn-inline" id="saveEditorBtn">Save</button></div></div></div>
-
-  <!-- ABOUT MODAL -->
-  <div class="modal-backdrop" id="aboutBackdrop"><div class="modal" style="max-width:640px;"><div class="modal-head"><h3>About • My Life Journal</h3><button class="iconbtn" id="closeAboutBtn">✕</button></div><div class="modal-body"><div class="card notice" style="margin:0;"><div style="font-weight:950; margin-bottom:6px;">What this is</div><div class="muted" style="line-height:1.5;">A Journal that you can use through Internet, you don't need papers and pen or even a book to write or put your thoughts about your life story. Share with Friends or Family your thoughts, if you want. Be Open and Creative whenever you want to My Life Journal.</div></div><br><div class="card notice" style="margin:0;"><h3>Our Team</h3><div class="team-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));"><div class="member"><a href="https://www.facebook.com/carlonuyda7" target="_blank"><img src="/Team/Carlo.jpg" onerror="this.src='https://ui-avatars.com/api/?background=10b981&color=fff&name=Carlo&size=100'"></a><p>Carlo Nuyda</p></div><div class="member"><a href="https://www.facebook.com/yurievillacorte" target="_blank"><img src="/Team/Yurie.jpg" onerror="this.src='https://ui-avatars.com/api/?background=0ea5e9&color=fff&name=Yurie&size=100'"></a><p>Yurie Villacorte</p></div><div class="member"><a href="https://www.facebook.com/archie.jhon.gregorio" target="_blank"><img src="/Team/Archie.jpg" onerror="this.src='https://ui-avatars.com/api/?background=10b981&color=fff&name=Archie&size=100'"></a><p>Archie Jhon Gregorio</p></div><div class="member"><a href="https://www.facebook.com/kyle.serapia.507" target="_blank"><img src="/Team/Daisy.jpg" onerror="this.src='https://ui-avatars.com/api/?background=f59e0b&color=fff&name=Daisy&size=100'"></a><p>Daisy Serapia</p></div><div class="member"><a href="https://www.facebook.com/trishan.laurito.2025" target="_blank"><img src="/Team/Trishan.jpg" onerror="this.src='https://ui-avatars.com/api/?background=ef4444&color=fff&name=Trishan&size=100'"></a><p>Trishan Laurito</p></div></div></div></div></div></div>
-
-  <script>
-// ==================== DOM Elements ====================
-const $ = (id) => document.getElementById(id);
-
-// ==================== Constants ====================
-const API_URL = window.location.origin;
-const LS_USERS = "journal_ultra_users";
-const LS_CURRENT = "journal_ultra_current";
-const LS_THEME = "journal_ultra_theme";
-
-// ==================== Utility Functions ====================
-function escapeHtml(str){ return String(str ?? "").replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
-
-function toast(type, title, msg){
-  const wrap = $("toastWrap");
-  const el = document.createElement("div");
-  el.className = "toast" + (type === "danger" ? " danger" : "");
-  el.innerHTML = `<i class="fas ${type === "danger" ? "fa-exclamation-triangle" : "fa-check-circle"}"></i><div><div class="t-title">${escapeHtml(title)}</div><div class="t-msg">${escapeHtml(msg)}</div></div><button class="x" onclick="this.parentElement.remove()">✕</button>`;
-  wrap.appendChild(el);
-  setTimeout(() => el.remove(), 4000);
-}
-
-function applyTheme(t){ document.documentElement.setAttribute("data-theme", t); localStorage.setItem(LS_THEME, t); }
-function toggleTheme(){ let cur = localStorage.getItem(LS_THEME) || "light"; applyTheme(cur === "light" ? "dark" : "light"); }
-
-function readUsers(){ return JSON.parse(localStorage.getItem(LS_USERS) || "[]"); }
-function writeUsers(users){ localStorage.setItem(LS_USERS, JSON.stringify(users)); }
-function readCurrent(){ return JSON.parse(localStorage.getItem(LS_CURRENT) || "null"); }
-function writeCurrent(obj){ localStorage.setItem(LS_CURRENT, JSON.stringify(obj)); }
-function uuid(){ return Date.now() + "-" + Math.random().toString(36).substr(2, 9); }
-function validPin(pin){ return /^[0-9]{6}$/.test(pin); }
-
-function bytesToB64(bytes){ let bin = ""; bytes.forEach(b => bin += String.fromCharCode(b)); return btoa(bin); }
-function b64ToBytes(s){ return Uint8Array.from(atob(s), c => c.charCodeAt(0)); }
-async function sha256(str){ let enc = new TextEncoder().encode(str); let hash = await crypto.subtle.digest("SHA-256", enc); return bytesToB64(new Uint8Array(hash)); }
-async function deriveKey(pwd, salt){ let enc = new TextEncoder(); let base = await crypto.subtle.importKey("raw", enc.encode(pwd), "PBKDF2", false, ["deriveKey"]); return crypto.subtle.deriveKey({ name: "PBKDF2", salt: salt, iterations: 100000, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]); }
-async function encryptJson(obj, pwd, salt){ let iv = crypto.getRandomValues(new Uint8Array(12)); let key = await deriveKey(pwd, b64ToBytes(salt)); let plain = new TextEncoder().encode(JSON.stringify(obj)); let cipher = await crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, key, plain); return { iv: bytesToB64(iv), data: bytesToB64(new Uint8Array(cipher)) }; }
-async function decryptJson(enc, pwd, salt){ let key = await deriveKey(pwd, b64ToBytes(salt)); let plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64ToBytes(enc.iv) }, key, b64ToBytes(enc.data)); return JSON.parse(new TextDecoder().decode(plain)); }
-
-// ==================== Captcha ====================
-let captchaCode = "";
-function generateCaptcha(){
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ0123456789';
-  let code = '';
-  for (let i = 0; i < 6; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
-  captchaCode = code;
-  const captchaBox = $("captchaBox");
-  if (captchaBox) captchaBox.innerText = captchaCode;
-  const captchaInp = $("captchaInp");
-  if (captchaInp) captchaInp.value = "";
-}
-
-let recoveryCaptchaCode = "";
-function generateRecoveryCaptcha() {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ0123456789';
-  let code = '';
-  for (let i = 0; i < 6; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
-  recoveryCaptchaCode = code;
-  const captchaBox = $("recoveryCaptchaBox");
-  if (captchaBox) captchaBox.innerText = recoveryCaptchaCode;
-  const captchaInp = $("recoveryCaptchaInp");
-  if (captchaInp) captchaInp.value = "";
-}
-
-// ==================== Auth State ====================
-let authMode = "login";
-let sessionPassword = "";
-
-function toggleMode(mode){
-  authMode = mode;
-  $("tabLogin").classList.toggle("active", mode === "login");
-  $("tabSignup").classList.toggle("active", mode === "signup");
-  $("fieldName").classList.toggle("hidden", mode === "login");
-  $("submitBtn").innerText = mode === "login" ? "Login" : "Create Account";
-  generateCaptcha();
-}
-
-// ==================== User Functions ====================
-function getUser(){
-  const cur = readCurrent();
-  if(!cur?.email) return null;
-  return readUsers().find(u => u.email === cur.email) || null;
-}
-
-function setCurrentUser(u){ writeCurrent(u); }
-
-function upsertUser(updated){
-  const users = readUsers();
-  const idx = users.findIndex(u => u.email === updated.email);
-  if(idx !== -1) users[idx] = updated;
-  else users.push(updated);
-  writeUsers(users);
-}
-
-// ==================== Vault Functions ====================
-async function openVault(){
-  const me = getUser();
-  if(!me) return { posts: [] };
-  if(!me.vault || !me.vault.iv || !me.vault.data) return { posts: [] };
-  try{
-    return await decryptJson(me.vault, sessionPassword, me.kdfSalt);
-  } catch(err){
-    toast("danger", "Decrypt failed", "Could not open encrypted diary. Logging out.");
-    logout();
-    throw err;
-  }
-}
-
-async function saveVault(vault){
-  const me = getUser();
-  if(!me) return;
-  me.vault = await encryptJson(vault, sessionPassword, me.kdfSalt);
-  upsertUser(me);
-}
-
-// ==================== Sync Functions ====================
-async function syncToBackend(){
-  const currentUser = readCurrent();
-  if(!currentUser || !currentUser.email) return;
-  try{
-    const response = await fetch(`${API_URL}/api/sync/pull`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: currentUser.email }) });
-    if(response.ok){
-      const data = await response.json();
-      if(data.encryptedVault && data.encryptedVault.iv){
-        const users = readUsers();
-        const userIndex = users.findIndex(u => u.email === currentUser.email);
-        if(userIndex !== -1){
-          users[userIndex].vault = data.encryptedVault;
-          writeUsers(users);
-        }
-      }
+    const missingFields = [];
+    if (!email) missingFields.push("email");
+    if (!name) missingFields.push("name");
+    if (!passwordHash) missingFields.push("passwordHash");
+    if (!pinHash) missingFields.push("pinHash");
+    if (!kdfSalt) missingFields.push("kdfSalt");
+    if (!pinSalt) missingFields.push("pinSalt");
+    
+    if (missingFields.length > 0) {
+      console.log("❌ Missing fields:", missingFields);
+      return res.status(400).json({ error: `Missing required fields: ${missingFields.join(", ")}` });
     }
-  } catch(error){ console.log("Backend sync not available"); }
-}
+    
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    if (existingUser) {
+      console.log("❌ Email already exists:", email);
+      return res.status(400).json({ error: "Email already registered" });
+    }
+    
+    const user = new User({
+      email: email.toLowerCase(),
+      name,
+      passwordHash,
+      pinHash,
+      kdfSalt,
+      pinSalt,
+      photo: photo || null,
+      encryptedVault: encryptedVault || { iv: "", data: "" }
+    });
+    
+    await user.save();
+    console.log(`✅ New user created: ${email}`);
+    res.json(cleanUser(user));
+    
+  } catch (err) {
+    console.error("Signup error:", err);
+    res.status(500).json({ error: "Server error during signup: " + err.message });
+  }
+});
 
-// ==================== Signup/Login ====================
-async function signupUser(email, name, passwordHash, pinHash, kdfSalt, pinSalt){
+// Login
+app.post("/api/login", async (req, res) => {
   try {
-    const response = await fetch(`${API_URL}/api/signup`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, name, passwordHash, pinHash, kdfSalt, pinSalt, encryptedVault: { iv: "", data: "" } })
-    });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error);
-    setCurrentUser(data);
-    sessionPassword = passwordHash;
-    $("authSection").style.display = "none";
-    $("app").style.display = "block";
-    await saveVault({ posts: [] });
-    await loadUserData();
-    showView("home");
-    toast("", "Success", "Account created!");
-  } catch (e) {
-    toast("danger", "Signup Failed", e.message);
-  }
-}
-
-async function loginUser(email, passwordHash, pinHash){
-  try {
-    const response = await fetch(`${API_URL}/api/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, passwordHash, pinHash })
-    });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error);
-    setCurrentUser(data);
-    sessionPassword = passwordHash;
-    $("authSection").style.display = "none";
-    $("app").style.display = "block";
-    await loadUserData();
-    showView("home");
-    toast("", "Welcome", "Logged in successfully");
-  } catch (e) {
-    toast("danger", "Login Failed", e.message);
-  }
-}
-
-async function loadUserData(){
-  const me = getUser();
-  if(!me) return;
-  $("userGreet").innerText = me.name || me.email.split("@")[0];
-  $("userEmailSmall").innerText = me.email;
-  $("profName").innerText = me.name || "User";
-  $("profEmail").innerText = me.email;
-  let avatarUrl = me.photo || `https://ui-avatars.com/api/?background=10b981&color=fff&name=${encodeURIComponent(me.name || "User")}`;
-  $("userAvatar").src = avatarUrl;
-  $("topAvatar").src = avatarUrl;
-  
-  // Update data stats
-  const vault = await openVault();
-  const posts = vault.posts || [];
-  const dataEntryCount = $("dataEntryCount");
-  if (dataEntryCount) dataEntryCount.innerText = posts.length;
-  const dataStorageSize = $("dataStorageSize");
-  if (dataStorageSize) {
-    const size = JSON.stringify(me).length;
-    const kb = (size / 1024).toFixed(1);
-    dataStorageSize.innerText = `${kb} KB`;
-  }
-}
-
-// ==================== Navigation ====================
-function showView(v){
-  ["home","diary","stats","friends","settings"].forEach(id => { const el = $("view-"+id); if(el) el.classList.add("hidden"); });
-  $("view-"+v).classList.remove("hidden");
-  ["home","diary","stats","friends","settings"].forEach(id => { const nav = $("nav-"+id); if(nav) nav.classList.remove("active"); });
-  $("nav-"+v).classList.add("active");
-  if(window.innerWidth <= 768) closeDrawer();
-  if(v === "stats") updateStats();
-  if(v === "friends") { loadFriendsList(); checkIncomingRequests(); loadSharedInbox(); }
-}
-
-function toggleDrawer(){ $("sidebar").classList.toggle("open"); $("drawerBackdrop").classList.toggle("show"); }
-function closeDrawer(){ $("sidebar").classList.remove("open"); $("drawerBackdrop").classList.remove("show"); }
-function openAbout(){ $("aboutBackdrop").style.display = "flex"; }
-function closeAbout(){ $("aboutBackdrop").style.display = "none"; }
-function logout(){ sessionPassword = ""; localStorage.removeItem(LS_CURRENT); location.reload(); }
-
-// ==================== Recovery Functions ====================
-function openRecoveryModal() {
-  generateRecoveryCaptcha();
-  $("recoveryModal").style.display = "flex";
-  $("recoverEmail").value = "";
-  $("recoverName").value = "";
-  $("newPassword").value = "";
-  $("newPinRecovery").value = "";
-}
-
-function closeRecoveryModal() { $("recoveryModal").style.display = "none"; }
-
-async function handleAccountReset() {
-  const userCaptcha = $("recoveryCaptchaInp").value.trim().toUpperCase();
-  if (userCaptcha !== recoveryCaptchaCode) {
-    toast("danger", "Wrong Captcha", "Please enter the correct code");
-    generateRecoveryCaptcha();
-    return;
-  }
-  const email = $("recoverEmail").value.trim().toLowerCase();
-  const name = $("recoverName").value.trim();
-  const newPassword = $("newPassword").value;
-  const newPin = $("newPinRecovery").value;
-  if (!email || !name) { toast("warn", "Missing Info", "Please enter your email and full name."); return; }
-  if (newPin && newPin.length !== 6) { toast("warn", "Invalid PIN", "PIN must be exactly 6 digits."); return; }
-  try {
-    const response = await fetch(`${API_URL}/api/recover`, {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, name, newPassword, newPin })
-    });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error);
-    toast("success", "Reset Complete!", data.message);
-    closeRecoveryModal();
-    $("email").value = email;
-    $("pass").value = "";
-    $("pin").value = "";
-  } catch (error) {
-    toast("danger", "Reset Failed", error.message);
-  }
-}
-
-// ==================== Settings Tabs ====================
-function initSettingsTabs() {
-  const tabs = document.querySelectorAll('.settings-tab');
-  const panels = document.querySelectorAll('.settings-panel');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const tabId = tab.getAttribute('data-tab');
-      tabs.forEach(t => t.classList.remove('active'));
-      panels.forEach(p => p.classList.remove('active'));
-      tab.classList.add('active');
-      const activePanel = $(`settings-${tabId}`);
-      if (activePanel) activePanel.classList.add('active');
-    });
-  });
-}
-
-// ==================== Diary Functions ====================
-function normalizeEntry(e){
-  const nowIso = new Date().toISOString();
-  return { id: e.id || uuid(), title: String(e.title || "").slice(0,120), body: String(e.body || ""), mood: e.mood || "😐 Neutral", tags: Array.isArray(e.tags) ? e.tags : [], date: e.date || nowIso.slice(0,10), createdAt: e.createdAt || nowIso, editedAt: e.editedAt || "", image: e.image || null };
-}
-
-async function renderDiary(){
-  const vault = await openVault();
-  const posts = (vault.posts || []).map(normalizeEntry);
-  $("entryCount").innerText = `${posts.length} entries`;
-  const search = ($("diarySearch").value || "").toLowerCase();
-  const dateFilter = $("dateFilter").value;
-  const moodFilter = $("moodFilter").value;
-  const sortMode = $("sortMode").value;
-  let filtered = posts.filter(p => {
-    const hay = (p.title + " " + p.body + " " + (p.tags || []).join(" ")).toLowerCase();
-    return (!search || hay.includes(search)) && (!dateFilter || p.date === dateFilter) && (!moodFilter || p.mood === moodFilter);
-  });
-  filtered.sort((a,b) => sortMode === "oldest" ? new Date(a.createdAt) - new Date(b.createdAt) : new Date(b.createdAt) - new Date(a.createdAt));
-  if(filtered.length === 0){ $("diaryContainer").innerHTML = "<div class='card empty'>No matching entries found.</div>"; return; }
-  $("diaryContainer").innerHTML = filtered.map(p => `<div class='card'><div class='entry'><div><small>${p.date} • ${p.mood}</small>${p.title ? `<h4>${escapeHtml(p.title)}</h4>` : ""}<p>${escapeHtml(p.body)}</p>${p.image ? `<img class='thumb' src='${p.image}'>` : ""}<div class='chips'>${(p.tags||[]).map(t => `<span class='chip'>#${escapeHtml(t)}</span>`).join("")}</div></div><div class='entry-actions'><button class='iconbtn' onclick='shareToFriend("${p.id}")'><i class='fas fa-share'></i></button><button class='iconbtn' onclick='editEntry("${p.id}")'><i class='fas fa-edit'></i></button><button class='iconbtn' onclick='deleteEntry("${p.id}")'><i class='fas fa-trash'></i></button></div></div></div>`).join("");
-}
-
-async function quickSave(){
-  let title = $("quickTitle").value, mood = $("quickMood").value, tags = $("quickTags").value.split(",").map(t=>t.trim()).filter(Boolean), body = $("quickBody").value;
-  if(!body && !title) return toast("danger","Empty","Write something");
-  let vault = await openVault();
-  vault.posts = vault.posts || [];
-  vault.posts.push(normalizeEntry({ title, mood, tags, body, date: new Date().toISOString().slice(0,10), createdAt: new Date().toISOString(), image: null }));
-  await saveVault(vault);
-  $("quickTitle").value = ""; $("quickTags").value = ""; $("quickBody").value = "";
-  toast("","Saved","Entry added");
-  await renderDiary();
-}
-
-// ==================== Editor ====================
-let editingId = null, editingImage = null;
-function openEditor(entry=null){
-  editingId = entry?.id || null; editingImage = entry?.image || null;
-  $("editorTitle").innerText = editingId ? "Edit Entry" : "New Entry";
-  $("eTitle").value = entry?.title || "";
-  $("eMood").value = entry?.mood || "😐 Neutral";
-  $("eTags").value = (entry?.tags || []).join(", ");
-  $("eDate").value = entry?.date || new Date().toISOString().slice(0,10);
-  $("eBody").value = entry?.body || "";
-  $("imagePreview").classList.toggle("hidden", !editingImage);
-  if(editingImage) $("imagePreview").src = editingImage;
-  $("editorBackdrop").style.display = "flex";
-  updatePreview();
-}
-function closeEditor(){ $("editorBackdrop").style.display = "none"; editingId = null; editingImage = null; }
-function updatePreview(){ $("preview").innerHTML = ($("eBody").value || "").replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/\n/g,"<br>") || "Preview..."; }
-async function saveFromEditor(){
-  let title = $("eTitle").value, mood = $("eMood").value, tags = $("eTags").value.split(",").map(t=>t.trim()).filter(Boolean), date = $("eDate").value, body = $("eBody").value;
-  if(!title && !body) return toast("danger","Empty","Add content");
-  let vault = await openVault();
-  if(editingId){
-    let idx = vault.posts.findIndex(p => p.id === editingId);
-    if(idx !== -1) vault.posts[idx] = { ...vault.posts[idx], title, mood, tags, date, body, image: editingImage, editedAt: new Date().toISOString() };
-  } else { vault.posts.push(normalizeEntry({ id: uuid(), title, mood, tags, date, body, image: editingImage, createdAt: new Date().toISOString() })); }
-  await saveVault(vault);
-  closeEditor();
-  await renderDiary();
-  toast("","Saved","Entry saved");
-}
-async function editEntry(id){ let vault = await openVault(); let entry = vault.posts.find(p => p.id === id); if(entry) openEditor(entry); }
-async function deleteEntry(id){ if(!confirm("Delete this entry?")) return; let vault = await openVault(); vault.posts = vault.posts.filter(p => p.id !== id); await saveVault(vault); await renderDiary(); toast("","Deleted","Entry removed"); }
-
-// ==================== Stats ====================
-async function updateStats(){
-  const me = getUser(); if(!me) return;
-  const vault = await openVault();
-  const posts = (vault.posts || []).map(normalizeEntry);
-  $("kpiTotal").innerText = String(posts.length);
-  const dates = new Set(posts.map(p => p.date));
-  let streak = 0; for(let d = new Date();;){ let iso = d.toISOString().slice(0,10); if(dates.has(iso)) streak++; else break; d.setDate(d.getDate()-1); }
-  $("kpiStreak").innerText = String(streak);
-  const now = new Date(); const ym = now.toISOString().slice(0,7); const thisMonth = posts.filter(p => (p.date || "").slice(0,7) === ym).length;
-  $("kpiThisMonth").innerText = String(thisMonth);
-  drawChart(posts);
-}
-function drawChart(posts){
-  const c = $("chart"); if(!c) return;
-  const ctx = c.getContext("2d"); if(!ctx) return;
-  const dpr = window.devicePixelRatio || 1;
-  const cssW = c.clientWidth || 600, cssH = c.clientHeight || 160;
-  c.width = Math.floor(cssW * dpr); c.height = Math.floor(cssH * dpr);
-  ctx.scale(dpr, dpr);
-  const now = new Date(); const counts = [];
-  for(let i=11;i>=0;i--){ const d = new Date(now.getFullYear(), now.getMonth()-i, 1); counts.push(posts.filter(p => (p.date || "").slice(0,7) === d.toISOString().slice(0,7)).length); }
-  const W = cssW, H = cssH;
-  ctx.clearRect(0,0,W,H);
-  const pad = 18, max = Math.max(1, ...counts), barW = (W - pad*2) / counts.length;
-  ctx.globalAlpha = 0.25;
-  ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue("--border") || "#ccc";
-  for(let i=0;i<=4;i++){ const y = pad + (H - pad*2) * (i/4); ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(W-pad, y); ctx.stroke(); }
-  ctx.globalAlpha = 1;
-  for(let i=0;i<counts.length;i++){
-    const v = counts[i], bh = (H - pad*2) * (v / max), x = pad + i*barW + 6, y = H - pad - bh, bw = Math.max(6, barW - 12);
-    const primary = getComputedStyle(document.documentElement).getPropertyValue("--primary").trim() || "#10b981";
-    ctx.fillStyle = hexToRgba(primary, 0.6); ctx.fillRect(x, y, bw, bh);
-    ctx.fillStyle = hexToRgba(primary, 0.95); ctx.fillRect(x, y+bh-3, bw, 3);
-  }
-  ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--muted") || "#64748b";
-  ctx.font = "12px system-ui";
-}
-function hexToRgba(hex,a){ const h = hex.replace("#","").trim(); const full = h.length===3 ? h.split("").map(c=>c+c).join("") : h.padEnd(6,"0").slice(0,6); const r = parseInt(full.slice(0,2),16); const g = parseInt(full.slice(2,4),16); const b = parseInt(full.slice(4,6),16); return `rgba(${r},${g},${b},${a})`; }
-async function refreshAll(){ await renderDiary(); await updateStats(); }
-
-// ==================== Friends Functions ====================
-async function addFriendAction(){
-  const emailInput = $("friendEmail");
-  const targetEmail = emailInput.value.trim().toLowerCase();
-  const currentUser = readCurrent();
-  if(!targetEmail) return toast("danger","Error","Enter email");
-  if(targetEmail === currentUser.email.toLowerCase()) return toast("danger","Error","Cannot add yourself");
-  try{
-    const response = await fetch(`${API_URL}/api/friends/request`, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({userEmail:currentUser.email, friendEmail:targetEmail})});
-    const data = await response.json();
-    if(!response.ok) throw new Error(data.error);
-    toast("success","Sent","Friend request sent");
-    emailInput.value = "";
-    checkIncomingRequests();
-  } catch(e){ toast("danger","Error",e.message); }
-}
-
-async function checkIncomingRequests(){
-  const currentUser = readCurrent();
-  if(!currentUser) return;
-  try{
-    const response = await fetch(`${API_URL}/api/friends/requests`, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({userEmail:currentUser.email})});
-    const data = await response.json();
-    const container = $("pendingRequests");
-    if(!container) return;
-    const requests = data.requests || [];
-    if(requests.length === 0){ container.innerHTML = '<p class="muted" style="text-align:center; padding:10px;">No pending requests.</p>'; return; }
-    container.innerHTML = requests.map(req => `<div style="display:flex; justify-content:space-between; align-items:center; padding:12px; border-bottom:1px solid var(--border);"><span><strong>${escapeHtml(req.from?.email || req.fromEmail)}</strong></span><button class="btn-inline" onclick='acceptFriendRequest("${req._id}")'>Accept</button></div>`).join('');
-  } catch(e){ console.error(e); }
-}
-
-async function acceptFriendRequest(requestId){
-  const currentUser = readCurrent();
-  try{
-    const response = await fetch(`${API_URL}/api/friends/accept`, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({userEmail:currentUser.email, requestId:requestId})});
-    const data = await response.json();
-    if(!response.ok) throw new Error(data.error);
-    toast("success","Accepted","Friend added!");
-    checkIncomingRequests();
-    loadFriendsList();
-  } catch(e){ toast("danger","Error",e.message); }
-}
-
-async function unfriendFriend(friendId, friendEmail){
-  if(!confirm(`Are you sure you want to unfriend ${friendEmail}?`)) return;
-  const currentUser = readCurrent();
-  try{
-    const response = await fetch(`${API_URL}/api/friends/unfriend`, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({userEmail:currentUser.email, friendId:friendId, friendEmail:friendEmail})});
-    const data = await response.json();
-    if(!response.ok) throw new Error(data.error);
-    toast("success","Unfriended",`${friendEmail} removed`);
-    loadFriendsList();
-  } catch(e){ toast("danger","Error",e.message); }
-}
-
-async function loadFriendsList(){
-  const currentUser = readCurrent();
-  if(!currentUser) return;
-  try{
-    const response = await fetch(`${API_URL}/api/friends/list`, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({userEmail:currentUser.email})});
-    const data = await response.json();
-    const container = $("confirmedFriendsList");
-    if(!container) return;
-    const friends = data.friends || [];
-    // Update friend count in settings
-    const dataFriendCount = $("dataFriendCount");
-    if (dataFriendCount) dataFriendCount.innerText = friends.length;
-    if(friends.length === 0){ container.innerHTML = '<p class="muted" style="text-align:center; padding:10px;">No friends added yet.</p>'; return; }
-    container.innerHTML = friends.map(friend => `<div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px; border-bottom:1px solid var(--border);"><div style="display:flex; align-items:center; gap:12px;"><div style="width:35px; height:35px; border-radius:50%; background:var(--primary); color:white; display:flex; align-items:center; justify-content:center; font-weight:bold;">${friend.name ? friend.name.charAt(0).toUpperCase() : friend.email.charAt(0).toUpperCase()}</div><div><div style="font-weight:500;">${escapeHtml(friend.name || friend.email)}</div><div style="font-size:0.8rem; color:var(--muted);">${escapeHtml(friend.email)}</div></div></div><button class="btn-ghost" style="background:#ef4444; color:white; padding:6px 12px;" onclick='unfriendFriend("${friend._id}", "${escapeHtml(friend.email)}")'><i class="fas fa-user-minus"></i> Unfriend</button></div>`).join('');
-  } catch(e){ console.error(e); }
-}
-
-async function shareToFriend(postId){
-  const friendEmail = prompt("Enter friend's email:");
-  if(!friendEmail) return;
-  const vault = await openVault();
-  const entry = vault.posts.find(p => p.id === postId);
-  if(!entry) return toast("danger","Error","Entry not found");
-  const currentUser = readCurrent();
-  try{
-    const response = await fetch(`${API_URL}/api/share`, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({fromEmail:currentUser.email, toEmail:friendEmail, title:entry.title, body:entry.body, mood:entry.mood, date:entry.date, image:entry.image||null, tags:entry.tags||[]})});
-    const data = await response.json();
-    if(!response.ok) throw new Error(data.error);
-    toast("success","Shared","Entry shared!");
-  } catch(e){ toast("danger","Error",e.message); }
-}
-
-async function loadSharedInbox(){
-  const currentUser = readCurrent();
-  if(!currentUser) return;
-  try{
-    const response = await fetch(`${API_URL}/api/shared/inbox`, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({userEmail:currentUser.email})});
-    const data = await response.json();
-    const container = $("sharedInboxContainer");
-    if(!container) return;
-    const shared = data.shared || [];
-    if(shared.length === 0){ container.innerHTML = '<p class="muted" style="text-align:center; padding:20px;">No entries shared with you yet.</p>'; return; }
-    container.innerHTML = shared.map(post => `<div class="card" style="margin-bottom:10px; border-left:3px solid var(--primary);"><div style="display:flex; justify-content:space-between;"><small>From: <b>${escapeHtml(post.fromEmail)}</b></small><small class="muted">${new Date(post.sharedAt).toLocaleDateString()}</small></div><h4 style="margin:8px 0;">${escapeHtml(post.title)}</h4><p>${escapeHtml(post.body)}</p>${post.image ? `<img src="${post.image}" style="width:100px; border-radius:5px; margin-top:5px;">` : ''}</div>`).join('');
-  } catch(e){ console.error(e); }
-}
-
-// ==================== Settings Functions ====================
-function uploadPhoto(e){
-  const file = e.target.files[0]; if(!file) return;
-  if(file.size > 2000000){ e.target.value = ""; return toast("warn","Too large","Image under 2MB."); }
-  const reader = new FileReader();
-  reader.onload = () => { const me = getUser(); if(!me) return; me.photo = reader.result; upsertUser(me); loadUserData(); toast("","Updated","Profile photo updated."); e.target.value = ""; };
-  reader.readAsDataURL(file);
-}
-async function exportData(){ const me = getUser(); if(!me) return; const blob = new Blob([JSON.stringify(me)], {type:"application/json"}); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "journal-backup.json"; a.click(); }
-async function importData(e){ const file = e.target.files[0]; if(!file) return; const r = new FileReader(); r.onload = async() => { try{ const data = JSON.parse(r.result); setCurrentUser(data); await loadUserData(); toast("","Imported","Restart to apply"); location.reload(); } catch(e){ toast("danger","Invalid file","Could not import"); } }; r.readAsText(file); }
-async function wipeMyData(){ if(!confirm("Delete ALL your data?")) return; const me = getUser(); if(me) await fetch(`${API_URL}/api/user/update`, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({email:me.email, encryptedVault:{iv:"",data:""}})}); localStorage.clear(); logout(); }
-
-// ==================== PIN Visibility ====================
-let pinHidden = true;
-function togglePinVisibility(){
-  pinHidden = !pinHidden;
-  const pinTextEl = $("pinText");
-  const pinIconEl = $("#pinToggleIcon");
-  if(pinTextEl) pinTextEl.innerText = pinHidden ? "••••••" : "PIN is hashed for security";
-  if(pinIconEl) pinIconEl.className = pinHidden ? "fas fa-eye" : "fas fa-eye-slash";
-  if(!pinHidden){ setTimeout(() => { if(!pinHidden){ pinHidden = true; if(pinTextEl) pinTextEl.innerText = "••••••"; if(pinIconEl) pinIconEl.className = "fas fa-eye"; } }, 3000); }
-}
-
-// ==================== Event Listeners ====================
-$("authForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  if(($("captchaInp").value || "").trim().toUpperCase() !== captchaCode){
-    generateCaptcha();
-    return toast("danger", "Wrong captcha", "Try again.");
-  }
-  const email = $("email").value.trim().toLowerCase();
-  const pass = $("pass").value;
-  const pin = ($("pin").value || "").trim();
-  if(!email) return toast("warn", "Missing email", "Please enter your email.");
-  if(!pass) return toast("warn", "Missing password", "Please enter your password.");
-  if(!validPin(pin)) return toast("warn", "Invalid PIN", "PIN must be exactly 6 digits.");
-  if(authMode === "signup"){
-    const name = $("regName").value.trim();
-    if(!name || name.length < 2) return toast("warn", "Name required", "Enter your full name.");
-    if(pass.length < 8) return toast("warn", "Weak password", "Use at least 8 characters.");
-    const kdfSalt = bytesToB64(crypto.getRandomValues(new Uint8Array(16)));
-    const pinSalt = bytesToB64(crypto.getRandomValues(new Uint8Array(16)));
-    const passwordHash = await sha256(pass + "|" + kdfSalt);
-    const pinHash = await sha256(pin + "|" + pinSalt);
-    await signupUser(email, name, passwordHash, pinHash, kdfSalt, pinSalt);
-  } else {
-    let users = readUsers();
-    const user = users.find(u => u.email === email);
+    const { email, passwordHash, pinHash } = req.body;
+    
+    const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
-      toast("danger", "Account Not Found", "Please sign up first or check your email");
-      return;
+      return res.status(401).json({ error: "Invalid credentials" });
     }
-    const passwordHash = await sha256(pass + "|" + user.kdfSalt);
-    const pinHash = await sha256(pin + "|" + user.pinSalt);
-    await loginUser(email, passwordHash, pinHash);
+    
+    // Check if account is locked
+    if (user.lockedUntil && new Date() < user.lockedUntil) {
+      const minutesLeft = Math.ceil((user.lockedUntil - new Date()) / 60000);
+      return res.status(401).json({ error: `Account locked. Try again in ${minutesLeft} minutes` });
+    }
+    
+    if (user.passwordHash !== passwordHash || user.pinHash !== pinHash) {
+      user.failedAttempts = (user.failedAttempts || 0) + 1;
+      if (user.failedAttempts >= 5) {
+        user.lockedUntil = new Date(Date.now() + 15 * 60000);
+        user.failedAttempts = 0;
+      }
+      await user.save();
+      return res.status(401).json({ error: "Invalid email, password, or PIN" });
+    }
+    
+    user.failedAttempts = 0;
+    user.lockedUntil = null;
+    user.lastSync = new Date();
+    await user.save();
+    
+    console.log(`✅ User logged in: ${email}`);
+    res.json(cleanUser(user));
+    
+  } catch (err) {
+    console.error("Login error:", err);
+    res.status(500).json({ error: "Server error during login" });
   }
 });
 
-// Tab buttons
-$("tabLogin").addEventListener("click", () => toggleMode("login"));
-$("tabSignup").addEventListener("click", () => toggleMode("signup"));
-
-// Theme and About buttons
-$("themeBtn").addEventListener("click", toggleTheme);
-$("aboutBtn").addEventListener("click", openAbout);
-$("themeToggleBtn").addEventListener("click", toggleTheme);
-$("openAboutBtn").addEventListener("click", openAbout);
-$("closeAboutBtn").addEventListener("click", closeAbout);
-$("refreshCaptchaBtn").addEventListener("click", generateCaptcha);
-
-// Navigation
-$("sidebarLogo").addEventListener("click", () => showView("home"));
-$("nav-home").addEventListener("click", () => showView("home"));
-$("nav-diary").addEventListener("click", () => showView("diary"));
-$("nav-stats").addEventListener("click", () => showView("stats"));
-$("nav-friends").addEventListener("click", () => showView("friends"));
-$("nav-settings").addEventListener("click", () => showView("settings"));
-$("logoutBtn").addEventListener("click", () => logout());
-$("hamburgerBtn").addEventListener("click", toggleDrawer);
-$("drawerBackdrop").addEventListener("click", closeDrawer);
-
-// Diary
-$("diarySearch").addEventListener("input", renderDiary);
-$("dateFilter").addEventListener("change", renderDiary);
-$("sortMode").addEventListener("change", renderDiary);
-$("moodFilter").addEventListener("change", renderDiary);
-$("quickSaveBtn").addEventListener("click", quickSave);
-$("newEntryBtn").addEventListener("click", () => openEditor());
-
-// Editor
-$("closeEditorBtn").addEventListener("click", closeEditor);
-$("cancelEditorBtn").addEventListener("click", closeEditor);
-$("saveEditorBtn").addEventListener("click", saveFromEditor);
-$("eBody").addEventListener("input", updatePreview);
-$("eImage").addEventListener("change", (e) => {
-  let f = e.target.files[0]; if(!f) return;
-  let r = new FileReader();
-  r.onload = () => { editingImage = r.result; $("imagePreview").src = editingImage; $("imagePreview").classList.remove("hidden"); };
-  r.readAsDataURL(f);
+// Find user by email (returns salts only for login)
+app.post("/api/user/find", async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email: email.toLowerCase() });
+    
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    res.json({
+      email: user.email,
+      kdfSalt: user.kdfSalt,
+      pinSalt: user.pinSalt
+    });
+  } catch (err) {
+    console.error("Find user error:", err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// Settings
-$("changePhotoBtn").addEventListener("click", () => $("photoInput").click());
-$("photoInput").addEventListener("change", uploadPhoto);
-$("exportDataBtn").addEventListener("click", exportData);
-$("deleteAccountBtn").addEventListener("click", wipeMyData);
-$("exportBtn").addEventListener("click", exportData);
-$("importBtn").addEventListener("click", () => $("importFile").click());
-$("importFile").addEventListener("change", importData);
-$("sendRequestBtn").addEventListener("click", addFriendAction);
-$("togglePinBtn").addEventListener("click", togglePinVisibility);
-
-// Recovery
-$("forgotPasswordBtn").addEventListener("click", openRecoveryModal);
-$("closeRecoveryModalBtn").addEventListener("click", closeRecoveryModal);
-$("backToLoginBtn").addEventListener("click", closeRecoveryModal);
-$("resetAccountBtn").addEventListener("click", handleAccountReset);
-$("refreshRecoveryCaptchaBtn").addEventListener("click", generateRecoveryCaptcha);
-$("recoveryModal").addEventListener("click", (e) => { if (e.target === $("recoveryModal")) closeRecoveryModal(); });
-
-// Settings tabs
-initSettingsTabs();
-
-// Make functions global for onclick
-window.shareToFriend = shareToFriend;
-window.editEntry = editEntry;
-window.deleteEntry = deleteEntry;
-window.acceptFriendRequest = acceptFriendRequest;
-window.unfriendFriend = unfriendFriend;
-
-// Keyboard shortcuts
-document.addEventListener("keydown", (e) => {
-  if(e.ctrlKey && e.key.toLowerCase() === "k"){ e.preventDefault(); if($("app").style.display !== "none") openEditor(); }
-  if(e.key === "Escape" && $("editorBackdrop").style.display === "flex") closeEditor();
+// Update user data
+app.post("/api/user/update", async (req, res) => {
+  try {
+    const { email, encryptedVault, photo, name } = req.body;
+    
+    const user = await User.findOne({ email: email.toLowerCase() });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    if (encryptedVault) user.encryptedVault = encryptedVault;
+    if (photo !== undefined) user.photo = photo;
+    if (name) user.name = name;
+    user.lastSync = new Date();
+    
+    await user.save();
+    
+    console.log(`✅ User updated: ${email}`);
+    res.json({ 
+      message: "User updated",
+      user: cleanUser(user)
+    });
+    
+  } catch (err) {
+    console.error("Update error:", err);
+    res.status(500).json({ error: "Server error during update" });
+  }
 });
 
-// Initialize
-(function init(){
-  let savedTheme = localStorage.getItem(LS_THEME);
-  applyTheme(savedTheme || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
-  generateCaptcha();
-  toggleMode("login");
-  let savedUser = readCurrent();
-  if(savedUser?.email){ $("email").value = savedUser.email; toast("warn","Session found","Enter password + PIN to unlock."); }
-  setInterval(() => { let currentUser = readCurrent(); if(currentUser && $("app").style.display !== "none") syncToBackend(); }, 30000);
-})();
-  </script>
-</body>
-</html>
+// Account Recovery - Reset password or PIN
+app.post("/api/recover", async (req, res) => {
+  try {
+    const { email, name, newPassword, newPin } = req.body;
+    
+    const user = await User.findOne({ email: email.toLowerCase() });
+    
+    if (!user) {
+      return res.status(404).json({ error: "Account not found" });
+    }
+    
+    if (user.name.toLowerCase() !== name.toLowerCase()) {
+      return res.status(401).json({ error: "Name does not match our records" });
+    }
+    
+    let message = "Account updated: ";
+    
+    if (newPassword && newPassword.length >= 8) {
+      const newKdfSalt = bytesToB64(crypto.getRandomValues(new Uint8Array(16)));
+      const newPasswordHash = await sha256(newPassword + "|" + newKdfSalt);
+      user.passwordHash = newPasswordHash;
+      user.kdfSalt = newKdfSalt;
+      user.encryptedVault = { iv: "", data: "" };
+      message += "Password changed. ";
+    }
+    
+    if (newPin && newPin.length === 6) {
+      const newPinSalt = bytesToB64(crypto.getRandomValues(new Uint8Array(16)));
+      const newPinHash = await sha256(newPin + "|" + newPinSalt);
+      user.pinHash = newPinHash;
+      user.pinSalt = newPinSalt;
+      message += "PIN changed. ";
+    }
+    
+    user.failedAttempts = 0;
+    user.lockedUntil = null;
+    await user.save();
+    
+    console.log(`✅ Account recovered: ${email}`);
+    res.json({ message: message + "You can now log in with your new credentials." });
+    
+  } catch (err) {
+    console.error("Recovery error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+/* =========================
+   FRIEND SYSTEM ROUTES
+========================= */
+
+// Send friend request
+app.post("/api/friends/request", async (req, res) => {
+  try {
+    const { userEmail, friendEmail } = req.body;
+    
+    const user = await User.findOne({ email: userEmail.toLowerCase() });
+    const friend = await User.findOne({ email: friendEmail.toLowerCase() });
+    
+    if (!user || !friend) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    if (user._id.toString() === friend._id.toString()) {
+      return res.status(400).json({ error: "Cannot add yourself" });
+    }
+    
+    if (user.friends.includes(friend._id)) {
+      return res.status(400).json({ error: "Already friends" });
+    }
+    
+    const existingRequest = friend.friendRequests.find(
+      req => req.from.toString() === user._id.toString() && req.status === 'pending'
+    );
+    
+    if (existingRequest) {
+      return res.status(400).json({ error: "Friend request already sent" });
+    }
+    
+    friend.friendRequests.push({ 
+      from: user._id, 
+      fromEmail: user.email,
+      status: 'pending',
+      createdAt: new Date()
+    });
+    await friend.save();
+    
+    console.log(`✅ Friend request sent: ${user.email} -> ${friend.email}`);
+    res.json({ message: "Friend request sent" });
+    
+  } catch (err) {
+    console.error("Friend request error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Accept friend request
+app.post("/api/friends/accept", async (req, res) => {
+  try {
+    const { userEmail, requestId } = req.body;
+    
+    const user = await User.findOne({ email: userEmail.toLowerCase() });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    const request = user.friendRequests.id(requestId);
+    if (!request) {
+      return res.status(404).json({ error: "Request not found" });
+    }
+    
+    request.status = 'accepted';
+    
+    user.friends.push(request.from);
+    await user.save();
+    
+    const requester = await User.findById(request.from);
+    if (requester && !requester.friends.includes(user._id)) {
+      requester.friends.push(user._id);
+      await requester.save();
+    }
+    
+    console.log(`✅ Friend request accepted: ${userEmail}`);
+    res.json({ message: "Friend request accepted" });
+    
+  } catch (err) {
+    console.error("Accept friend error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Get friends list
+app.post("/api/friends/list", async (req, res) => {
+  try {
+    const { userEmail } = req.body;
+    
+    const user = await User.findOne({ email: userEmail.toLowerCase() })
+      .populate('friends', 'email name photo');
+    
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    res.json({ friends: user.friends });
+    
+  } catch (err) {
+    console.error("Get friends error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Get pending friend requests
+app.post("/api/friends/requests", async (req, res) => {
+  try {
+    const { userEmail } = req.body;
+    
+    const user = await User.findOne({ email: userEmail.toLowerCase() })
+      .populate('friendRequests.from', 'email name photo');
+    
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    const pendingRequests = user.friendRequests.filter(req => req.status === 'pending');
+    res.json({ requests: pendingRequests });
+    
+  } catch (err) {
+    console.error("Get requests error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Unfriend - Remove friend from both users
+app.post("/api/friends/unfriend", async (req, res) => {
+  try {
+    const { userEmail, friendId, friendEmail } = req.body;
+    
+    const user = await User.findOne({ email: userEmail.toLowerCase() });
+    const friend = await User.findById(friendId);
+    
+    if (!user || !friend) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    user.friends = user.friends.filter(id => id.toString() !== friendId);
+    await user.save();
+    
+    friend.friends = friend.friends.filter(id => id.toString() !== user._id.toString());
+    await friend.save();
+    
+    console.log(`✅ Unfriended: ${user.email} <-> ${friend.email}`);
+    res.json({ message: "Unfriended successfully" });
+    
+  } catch (err) {
+    console.error("Unfriend error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+/* =========================
+   SHARING ROUTES
+========================= */
+
+// Share entry with friend
+app.post("/api/share", async (req, res) => {
+  try {
+    const { fromEmail, toEmail, title, body, mood, date, image, tags } = req.body;
+    
+    const fromUser = await User.findOne({ email: fromEmail.toLowerCase() });
+    const toUser = await User.findOne({ email: toEmail.toLowerCase() });
+    
+    if (!fromUser || !toUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    if (!fromUser.friends.includes(toUser._id)) {
+      return res.status(403).json({ error: "Not friends with this user" });
+    }
+    
+    const sharedEntry = new SharedEntry({
+      from: fromUser._id,
+      to: toUser._id,
+      fromEmail: fromEmail.toLowerCase(),
+      toEmail: toEmail.toLowerCase(),
+      title: title || "",
+      body: body || "",
+      mood: mood || "",
+      date: date || "",
+      image: image || null,
+      tags: tags || []
+    });
+    
+    await sharedEntry.save();
+    
+    console.log(`✅ Entry shared: ${fromEmail} -> ${toEmail}`);
+    res.json({ message: "Entry shared successfully", id: sharedEntry._id });
+    
+  } catch (err) {
+    console.error("Share error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Get shared entries (inbox)
+app.post("/api/shared/inbox", async (req, res) => {
+  try {
+    const { userEmail } = req.body;
+    
+    const sharedEntries = await SharedEntry.find({ toEmail: userEmail.toLowerCase() })
+      .sort({ sharedAt: -1 });
+    
+    res.json({ shared: sharedEntries });
+    
+  } catch (err) {
+    console.error("Get inbox error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+/* =========================
+   SYNC ROUTES
+========================= */
+
+// Pull latest data from server
+app.post("/api/sync/pull", async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email: email.toLowerCase() });
+    
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    res.json({
+      encryptedVault: user.encryptedVault,
+      lastSync: user.lastSync
+    });
+  } catch (err) {
+    console.error("Pull error:", err);
+    res.status(500).json({ error: "Pull failed" });
+  }
+});
+
+// Push local changes to server
+app.post("/api/sync/push", async (req, res) => {
+  try {
+    const { email, encryptedVault } = req.body;
+    const user = await User.findOne({ email: email.toLowerCase() });
+    
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    user.encryptedVault = encryptedVault;
+    user.lastSync = new Date();
+    await user.save();
+    
+    console.log(`✅ Sync push from: ${email}`);
+    res.json({ 
+      message: "Changes pushed successfully",
+      lastSync: user.lastSync
+    });
+  } catch (err) {
+    console.error("Push error:", err);
+    res.status(500).json({ error: "Push failed" });
+  }
+});
+
+/* =========================
+   HEALTH CHECK
+========================= */
+
+app.get("/api/health", (req, res) => {
+  const dbStatus = mongoose.connection.readyState === 1 ? "connected" : "disconnected";
+  res.json({ 
+    status: "ok", 
+    db: dbStatus,
+    timestamp: new Date().toISOString()
+  });
+});
+
+/* =========================
+   STATIC FILES & FRONTEND
+========================= */
+
+// Serve static files from 'public' directory
+app.use(express.static(path.join(__dirname, "public")));
+
+// Serve index.html for all other routes (SPA support)
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+/* =========================
+   START SERVER
+========================= */
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`\n🚀 Server running on http://localhost:${PORT}`);
+  console.log(`📡 API available at http://localhost:${PORT}/api`);
+  console.log(`📁 Frontend served from /public folder`);
+});
